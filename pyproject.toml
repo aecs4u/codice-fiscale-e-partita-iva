@@ -64,12 +64,10 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.urls]
-Homepage = "https://github.com/fabiocaccamo/python-codice_fiscale"
-Download = "https://github.com/fabiocaccamo/python-codice_fiscale/releases"
-Documentation = "https://github.com/fabiocaccamo/python-codice_fiscale#readme"
-Issues = "https://github.com/fabiocaccamo/python-codice_fiscale/issues"
-Funding = "https://github.com/sponsors/fabiocaccamo/"
-Twitter = "https://twitter.com/fabiocaccamo"
+Homepage = "https://github.com/aecs4u/codice-fiscale-e-partita-iva"
+Documentation = "https://github.com/aecs4u/codice-fiscale-e-partita-iva#readme"
+Issues = "https://github.com/aecs4u/codice-fiscale-e-partita-iva/issues"
+Repository = "https://github.com/aecs4u/codice-fiscale-e-partita-iva"
 
 [tool.black]
 line-length = 88
