@@ -44,7 +44,7 @@ dependencies = [
     "uvicorn>=0.35.0",
 ]
 
-dynamic = ["version"]
+version = "0.10.4"
 maintainers = [
     { name = "Fabio Caccamo", email = "fabio.caccamo@gmail.com" },
 ]
@@ -138,9 +138,6 @@ aecs4u-auth = { git = "https://github.com/aecs4u/aecs4u-auth.git", branch = "mai
 
 [tool.setuptools]
 packages = ["codice_fiscale"]
-
-[tool.setuptools.dynamic.version]
-attr = "codice_fiscale.metadata.__version__"
 
 [dependency-groups]
 dev = [
