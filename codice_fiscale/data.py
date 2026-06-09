@@ -8,11 +8,8 @@ import fsutil
 
 
 def get_data_basedir() -> str:
-    # if getattr(sys, "frozen", False):
-    #     # standalone executable (eg. PyInstaller)
-    #     return os.path.dirname(sys.executable)
-    # Get the project root directory (one level up from codice_fiscale package)
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    # Data files are bundled inside the package directory (codice_fiscale/data/)
+    return os.path.dirname(__file__)
 
 
 def get_data(filename: str) -> Any:

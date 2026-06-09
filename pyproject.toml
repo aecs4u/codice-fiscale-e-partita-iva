@@ -138,6 +138,10 @@ aecs4u-auth = { git = "https://github.com/aecs4u/aecs4u-auth.git", branch = "mai
 
 [tool.setuptools]
 packages = ["codice_fiscale"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+codice_fiscale = ["data/*.json"]
 
 [dependency-groups]
 dev = [
