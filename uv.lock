@@ -220,7 +220,7 @@ wheels = [
 ]
 
 [[package]]
-name = "codice-fiscale"
+name = "python-codicefiscale"
 version = "0.10.4"
 source = { editable = "." }
 dependencies = [

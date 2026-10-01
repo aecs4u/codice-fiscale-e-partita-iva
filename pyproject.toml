@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "codice_fiscale"
+name = "python-codicefiscale"
 description = "encode / decode italian fiscal codes - codifica / decodifica del Codice Fiscale italiano."
 authors = [
     {name = "Emanuele Cannizzaro", email = "emanuele.cannizzaro@gmail.com"},

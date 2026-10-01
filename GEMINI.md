@@ -1,6 +1,6 @@
 # Project Overview
 
-`python-codice_fiscale` is a comprehensive Python library designed for the encoding, decoding, and validation of Italian fiscal codes (Codice Fiscale) and VAT numbers (Partita IVA). It offers a versatile set of interfaces, including a direct Python API, a command-line interface (CLI), and a robust FastAPI-based REST API.
+`python-codicefiscale` is a comprehensive Python library designed for the encoding, decoding, and validation of Italian fiscal codes (Codice Fiscale) and VAT numbers (Partita IVA). It offers a versatile set of interfaces, including a direct Python API, a command-line interface (CLI), and a robust FastAPI-based REST API.
 
 The REST API is built for scalability and features optional Clerk authentication, making it suitable for secure deployments, particularly on Google Cloud Run. A notable feature of this project is its ability to auto-update geographical data (municipalities and countries), ensuring accuracy and relevance.
 
@@ -19,11 +19,11 @@ The REST API is built for scalability and features optional Clerk authentication
 
 *   **Basic Library Installation:**
     ```bash
-    pip install python-codice_fiscale
+    pip install python-codicefiscale
     ```
 *   **With FastAPI Support (for REST API):**
     ```bash
-    pip install 'python-codice_fiscale[api]'
+    pip install 'python-codicefiscale[api]'
     ```
 
 ## Development Setup (API Testing)
@@ -31,8 +31,8 @@ The REST API is built for scalability and features optional Clerk authentication
 To set up the project for development and test the API with JWT token generation:
 
 ```bash
-git clone https://github.com/fabiocaccamo/python-codice_fiscale.git
-cd python-codice_fiscale
+git clone https://github.com/fabiocaccamo/python-codicefiscale.git
+cd python-codicefiscale
 pip install uv && uv sync
 cd frontend && npm install && npm run setup
 cd .. && uv run python -m codice_fiscale.__main_api__ &

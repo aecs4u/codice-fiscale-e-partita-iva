@@ -1,19 +1,19 @@
-[![](https://img.shields.io/pypi/pyversions/python-codice_fiscale.svg?logoColor=white&color=blue&logo=python)](https://www.python.org/)
-[![](https://img.shields.io/pypi/v/python-codice_fiscale.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/python-codice_fiscale/)
-[![](https://static.pepy.tech/badge/python-codice_fiscale/month)](https://pepy.tech/project/python-codice_fiscale)
-[![](https://img.shields.io/github/stars/fabiocaccamo/python-codice_fiscale?logo=github&style=flat)](https://github.com/fabiocaccamo/python-codice_fiscale/stargazers)
-[![](https://img.shields.io/pypi/l/python-codice_fiscale.svg?color=blue&)](https://github.com/fabiocaccamo/python-codice_fiscale/blob/main/LICENSE)
+[![](https://img.shields.io/pypi/pyversions/python-codicefiscale.svg?logoColor=white&color=blue&logo=python)](https://www.python.org/)
+[![](https://img.shields.io/pypi/v/python-codicefiscale.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/python-codicefiscale/)
+[![](https://static.pepy.tech/badge/python-codicefiscale/month)](https://pepy.tech/project/python-codicefiscale)
+[![](https://img.shields.io/github/stars/fabiocaccamo/python-codicefiscale?logo=github&style=flat)](https://github.com/fabiocaccamo/python-codicefiscale/stargazers)
+[![](https://img.shields.io/pypi/l/python-codicefiscale.svg?color=blue&)](https://github.com/fabiocaccamo/python-codicefiscale/blob/main/LICENSE)
 
-[![](https://results.pre-commit.ci/badge/github/fabiocaccamo/python-codice_fiscale/main.svg)](https://results.pre-commit.ci/latest/github/fabiocaccamo/python-codice_fiscale/main)
-[![](https://img.shields.io/github/actions/workflow/status/fabiocaccamo/python-codice_fiscale/test-package.yml?branch=main&label=build&logo=github)](https://github.com/fabiocaccamo/python-codice_fiscale)
-[![](https://img.shields.io/codecov/c/gh/fabiocaccamo/python-codice_fiscale?logo=codecov)](https://codecov.io/gh/fabiocaccamo/python-codice_fiscale)
-[![](https://img.shields.io/codacy/grade/8927f48c9498408f85167da9287edd86?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/python-codice_fiscale)
-[![](https://img.shields.io/scrutinizer/quality/g/fabiocaccamo/python-codice_fiscale?logo=scrutinizer)](https://scrutinizer-ci.com/g/fabiocaccamo/python-codice_fiscale/?branch=main)
+[![](https://results.pre-commit.ci/badge/github/fabiocaccamo/python-codicefiscale/main.svg)](https://results.pre-commit.ci/latest/github/fabiocaccamo/python-codicefiscale/main)
+[![](https://img.shields.io/github/actions/workflow/status/fabiocaccamo/python-codicefiscale/test-package.yml?branch=main&label=build&logo=github)](https://github.com/fabiocaccamo/python-codicefiscale)
+[![](https://img.shields.io/codecov/c/gh/fabiocaccamo/python-codicefiscale?logo=codecov)](https://codecov.io/gh/fabiocaccamo/python-codicefiscale)
+[![](https://img.shields.io/codacy/grade/8927f48c9498408f85167da9287edd86?logo=codacy)](https://www.codacy.com/app/fabiocaccamo/python-codicefiscale)
+[![](https://img.shields.io/scrutinizer/quality/g/fabiocaccamo/python-codicefiscale?logo=scrutinizer)](https://scrutinizer-ci.com/g/fabiocaccamo/python-codicefiscale/?branch=main)
 [![](https://img.shields.io/badge/code%20style-black-000000.svg?logo=python&logoColor=black)](https://github.com/psf/black)
 [![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-# python-codice_fiscale
-python-codice_fiscale is a library for encode/decode Italian fiscal code - **codifica/decodifica del Codice Fiscale**.
+# python-codicefiscale
+python-codicefiscale is a library for encode/decode Italian fiscal code - **codifica/decodifica del Codice Fiscale**.
 
 ![Codice Fiscale](https://user-images.githubusercontent.com/1035294/72058207-fa77dd80-32cf-11ea-8995-52324e7d3efe.png)
 
@@ -24,7 +24,7 @@ python-codice_fiscale is a library for encode/decode Italian fiscal code - **cod
 - `NEW` **Auto-updated** data (once a week) directly from **ANPR** data-source.
 - `NEW` **Command Line Interface** available.
 - **Transliteration** for name/surname
-- **Multiple** birthdate formats (date/string) *(you can see all the supported string formats [here](https://github.com/fabiocaccamo/python-codice_fiscale/blob/main/tests/test_codicefiscale.py#L81-L140))*
+- **Multiple** birthdate formats (date/string) *(you can see all the supported string formats [here](https://github.com/fabiocaccamo/python-codicefiscale/blob/main/tests/test_codicefiscale.py#L81-L140))*
 - **Automatic** birthplace city/foreign-country code detection from name
 - **Omocodia** support
 
@@ -32,12 +32,12 @@ python-codice_fiscale is a library for encode/decode Italian fiscal code - **cod
 
 ### Basic Installation
 ```bash
-pip install python-codice_fiscale
+pip install python-codicefiscale
 ```
 
 ### With FastAPI Support (for REST API)
 ```bash
-pip install 'python-codice_fiscale[api]'
+pip install 'python-codicefiscale[api]'
 ```
 
 ## 🚀 Quick Start for New Users
@@ -45,8 +45,8 @@ pip install 'python-codice_fiscale[api]'
 ### Development Setup (API Testing)
 ```bash
 # 1. Clone and install
-git clone https://github.com/fabiocaccamo/python-codice_fiscale.git
-cd python-codice_fiscale
+git clone https://github.com/fabiocaccamo/python-codicefiscale.git
+cd python-codicefiscale
 pip install uv && uv sync
 
 # 2. Setup JWT token generation for API testing
@@ -234,7 +234,7 @@ python -m codice_fiscale decode CCCFBA85D03L219P
 ## Testing
 ```bash
 # clone repository
-git clone https://github.com/fabiocaccamo/python-codice_fiscale.git && cd python-codice_fiscale
+git clone https://github.com/fabiocaccamo/python-codicefiscale.git && cd python-codicefiscale
 
 # create virtualenv and activate it
 python -m venv venv && . venv/bin/activate
@@ -262,7 +262,7 @@ Released under [MIT License](LICENSE.txt).
 
 ## Supporting
 
-- :star: Star this project on [GitHub](https://github.com/fabiocaccamo/python-codice_fiscale)
+- :star: Star this project on [GitHub](https://github.com/fabiocaccamo/python-codicefiscale)
 - :octocat: Follow me on [GitHub](https://github.com/fabiocaccamo)
 - :blue_heart: Follow me on [Bluesky](https://bsky.app/profile/fabiocaccamo.bsky.social)
 - :moneybag: Sponsor me on [Github](https://github.com/sponsors/fabiocaccamo)

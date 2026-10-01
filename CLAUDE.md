@@ -9,11 +9,11 @@ The branch must be push on github.
 A request to the user must be raised before the branch is merged on main.
 ## Project Overview
 
-This is `python-codice_fiscale`, a Python library for encoding/decoding Italian fiscal codes (Codice Fiscale). The library provides both a Python API and CLI interface for working with Italian tax codes.
+This is `python-codicefiscale`, a Python library for encoding/decoding Italian fiscal codes (Codice Fiscale). The library provides both a Python API and CLI interface for working with Italian tax codes.
 
 ### Project Structure
 ```
-python-codice_fiscale/
+python-codicefiscale/
 ├── codice_fiscale/              # Main Python library
 ├── frontend/                   # Node.js JWT token generator for testing
 ├── tests/                      # Python test suite
@@ -73,7 +73,7 @@ python -m codice_fiscale decode CCCFBA85D03L219P
 ### FastAPI Server Usage
 ```bash
 # Install API dependencies
-uv add "python-codice_fiscale[api]"
+uv add "python-codicefiscale[api]"
 
 # Start the API server
 python -m codice_fiscale.__main_api__
@@ -163,7 +163,7 @@ Located in `codice_fiscale/data/`:
 - `python-slugify`: Text normalization
 
 #### Optional API Dependencies
-Install with `pip install 'python-codice_fiscale[api]'`:
+Install with `pip install 'python-codicefiscale[api]'`:
 - `fastapi`: Web framework for REST API
 - `uvicorn`: ASGI server for FastAPI
 - `pyjwt[crypto]`: JWT token handling for authentication
