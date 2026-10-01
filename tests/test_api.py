@@ -1,7 +1,8 @@
 
 import os
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 try:
     from fastapi.testclient import TestClient
@@ -13,15 +14,16 @@ try:
         'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY': '',
         'CLERK_SECRET_KEY': ''
     }):
-        with patch('codicefiscale.app.load_dotenv'), patch('codicefiscale.auth.load_dotenv'):
+        with patch('codice_fiscale.app.load_dotenv'), patch('codice_fiscale.auth.load_dotenv'):
             import importlib
-            import codicefiscale.auth
-            import codicefiscale.app
-            importlib.reload(codicefiscale.auth)
-            importlib.reload(codicefiscale.app)
-            
-            from codicefiscale.app import app
-    
+
+            import codice_fiscale.app
+            import codice_fiscale.auth
+            importlib.reload(codice_fiscale.auth)
+            importlib.reload(codice_fiscale.app)
+
+            from codice_fiscale.app import app
+
     FASTAPI_AVAILABLE = True
 except ImportError:
     FASTAPI_AVAILABLE = False
@@ -129,7 +131,7 @@ class TestAPI:
     def test_validate_vat_valid(self):
         """Test VAT validation with valid number."""
         # Create a valid VAT number first
-        from codicefiscale import partitaiva
+        from codice_fiscale import partitaiva
         valid_vat = partitaiva.encode("0123456789")
 
         response = self.client.post(
@@ -181,7 +183,7 @@ class TestAPI:
 
     def test_decode_vat(self):
         """Test VAT decoding."""
-        from codicefiscale import partitaiva
+        from codice_fiscale import partitaiva
         valid_vat = partitaiva.encode("0123456789")
 
         response = self.client.post(
@@ -212,7 +214,7 @@ class TestAPI:
 
     def test_api_response_structure(self):
         """Test that API responses have correct structure."""
-        from codicefiscale import partitaiva
+        from codice_fiscale import partitaiva
         valid_vat = partitaiva.encode("0123456789")
 
         response = self.client.post(

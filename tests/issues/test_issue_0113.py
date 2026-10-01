@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 test_data = [
     ("XXXXXX39D44G133O", datetime.datetime(1939, 4, 4, 0, 0)),
@@ -18,7 +18,7 @@ def test_issue_0113(code, expected_birthdate):
     """
     Test for wrong birthplace code error (missing date-range in the data-source).
     """
-    code_data = codicefiscale.decode(code)
+    code_data = codice_fiscale.decode(code)
     code_data.pop("omocodes")
     code_data.pop("raw")
     assert code_data["birthdate"] == expected_birthdate

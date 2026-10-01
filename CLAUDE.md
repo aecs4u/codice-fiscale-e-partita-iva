@@ -9,15 +9,15 @@ The branch must be push on github.
 A request to the user must be raised before the branch is merged on main.
 ## Project Overview
 
-This is `python-codicefiscale`, a Python library for encoding/decoding Italian fiscal codes (Codice Fiscale). The library provides both a Python API and CLI interface for working with Italian tax codes.
+This is `python-codice_fiscale`, a Python library for encoding/decoding Italian fiscal codes (Codice Fiscale). The library provides both a Python API and CLI interface for working with Italian tax codes.
 
 ### Project Structure
 ```
-python-codicefiscale/
-├── codicefiscale/              # Main Python library
+python-codice_fiscale/
+├── codice_fiscale/              # Main Python library
 ├── frontend/                   # Node.js JWT token generator for testing
 ├── tests/                      # Python test suite
-├── codicefiscale/data/         # Municipality and country data
+├── codice_fiscale/data/        # Municipality and country data
 ├── scripts/                    # Data update scripts
 └── deploy-cloudrun.sh           # Google Cloud Run deployment
 ```
@@ -27,7 +27,7 @@ python-codicefiscale/
 ### Testing
 ```bash
 # Run all tests with coverage (minimum 90% required)
-pytest tests --cov=codicefiscale --cov-report=term-missing --cov-fail-under=90
+pytest tests --cov=codice_fiscale --cov-report=term-missing --cov-fail-under=90
 
 # Run tests across multiple Python versions
 tox
@@ -64,22 +64,22 @@ pre-commit install --install-hooks
 ### CLI Usage
 ```bash
 # Encode fiscal code
-python -m codicefiscale encode --firstname Fabio --lastname Caccamo --gender M --birthdate 03/04/1985 --birthplace Torino
+python -m codice_fiscale encode --firstname Fabio --lastname Caccamo --gender M --birthdate 03/04/1985 --birthplace Torino
 
 # Decode fiscal code
-python -m codicefiscale decode CCCFBA85D03L219P
+python -m codice_fiscale decode CCCFBA85D03L219P
 ```
 
 ### FastAPI Server Usage
 ```bash
 # Install API dependencies
-uv add "python-codicefiscale[api]"
+uv add "python-codice_fiscale[api]"
 
 # Start the API server
-python -m codicefiscale.__main_api__
+python -m codice_fiscale.__main_api__
 
 # Or with custom host/port
-uvicorn codicefiscale.app:app --host 0.0.0.0 --port 8000 --reload
+uvicorn codice_fiscale.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Frontend Tools (JWT Token Generation)
@@ -114,23 +114,23 @@ uv add --dev package-name
 
 # Run commands in virtual environment
 uv run python -m pytest
-uv run python -m codicefiscale.__main_api__
+uv run python -m codice_fiscale.__main_api__
 ```
 
 ## Architecture
 
 ### Core Module Structure
-- `codicefiscale/codicefiscale.py`: Main encoding/decoding logic with algorithms for fiscal code calculation
-- `codicefiscale/partitaiva.py`: Italian VAT number (Partita IVA) validation and encoding
-- `codicefiscale/data.py`: Data management for municipalities and countries with auto-update capability 
-- `codicefiscale/cli.py`: Command-line interface implementation
-- `codicefiscale/__main__.py`: CLI entry point
-- `codicefiscale/metadata.py`: Package metadata and version information
+- `codice_fiscale/codice_fiscale.py`: Main encoding/decoding logic with algorithms for fiscal code calculation
+- `codice_fiscale/partitaiva.py`: Italian VAT number (Partita IVA) validation and encoding
+- `codice_fiscale/data.py`: Data management for municipalities and countries with auto-update capability 
+- `codice_fiscale/cli.py`: Command-line interface implementation
+- `codice_fiscale/__main__.py`: CLI entry point
+- `codice_fiscale/metadata.py`: Package metadata and version information
 
 ### FastAPI Web Application (Optional)
-- `codicefiscale/app.py`: Unified REST API server with validation endpoints (works in both development and cloud environments)
-- `codicefiscale/auth.py`: Clerk authentication integration for API security
-- `codicefiscale/__main_api__.py`: API server entry point for local development
+- `codice_fiscale/app.py`: Unified REST API server with validation endpoints (works in both development and cloud environments)
+- `codice_fiscale/auth.py`: Clerk authentication integration for API security
+- `codice_fiscale/__main_api__.py`: API server entry point for local development
 
 ### Frontend Tools (Node.js)
 - `frontend/generate-token.js`: Clerk JWT token generator for testing
@@ -149,7 +149,7 @@ uv run python -m codicefiscale.__main_api__
 - **Comprehensive validation**: Full fiscal code and VAT number structure validation
 
 ### Data Files
-Located in `codicefiscale/data/`:
+Located in `codice_fiscale/data/`:
 - `municipalities.json`: Italian municipality codes and names
 - `countries.json`: Foreign country codes  
 - `*-patch.json`: Manual corrections to auto-updated data
@@ -163,7 +163,7 @@ Located in `codicefiscale/data/`:
 - `python-slugify`: Text normalization
 
 #### Optional API Dependencies
-Install with `pip install 'python-codicefiscale[api]'`:
+Install with `pip install 'python-codice_fiscale[api]'`:
 - `fastapi`: Web framework for REST API
 - `uvicorn`: ASGI server for FastAPI
 - `pyjwt[crypto]`: JWT token handling for authentication
@@ -246,7 +246,7 @@ Quick setup:
 4. Use token in API requests: `Authorization: Bearer <token>`
 
 ### Known Issues with Authentication
-- JWT signature verification is disabled for demo purposes (see `codicefiscale/auth.py:57`)
+- JWT signature verification is disabled for demo purposes (see `codice_fiscale/auth.py:57`)
 - For production use, implement proper JWKS fetching and signature verification
 - Empty string environment variables are properly filtered out (fixed in recent updates)
 

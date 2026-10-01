@@ -4,8 +4,8 @@ import subprocess
 from io import StringIO
 from unittest import mock
 
-from codicefiscale import __version__
-from codicefiscale.cli import run, run_with_args
+from codice_fiscale import __version__
+from codice_fiscale.cli import run, run_with_args
 
 
 def assert_output(command, expected_output):
@@ -25,7 +25,7 @@ def test_version():
 
 
 def test_version_from_command_line():
-    assert_output("python -m codicefiscale --version", __version__)
+    assert_output("python -m codice_fiscale --version", __version__)
 
 
 def test_main_without_args():
@@ -33,13 +33,13 @@ def test_main_without_args():
         with mock.patch("sys.argv", ["__main__"]):
             run()
             output = fake_output.getvalue().strip()
-            assert output == "For more info run: 'python -m codicefiscale --help'"
+            assert output == "For more info run: 'python -m codice_fiscale --help'"
 
 
 def test_main_without_args_from_command_line():
     assert_output(
-        "python -m codicefiscale",
-        "For more info run: 'python -m codicefiscale --help'",
+        "python -m codice_fiscale",
+        "For more info run: 'python -m codice_fiscale --help'",
     )
 
 
@@ -61,7 +61,7 @@ def test_encode():
 def test_encode_from_command_line():
     assert_output(
         (
-            "python -m codicefiscale encode "
+            "python -m codice_fiscale encode "
             "--firstname 'Mario' "
             "--lastname 'Rossi' "
             "--gender 'M' "
@@ -85,7 +85,7 @@ def test_encode_with_wrong_birthplace():
         run_with_args(args)
         output = fake_output.getvalue().strip()
         assert output == (
-            "[codicefiscale] 'birthplace' / 'birthdate' arguments "
+            "[codice_fiscale] 'birthplace' / 'birthdate' arguments "
             "('Romaaa,RM' / '01/01/1990') not mapped to code"
         )
 
@@ -167,7 +167,7 @@ def test_decode_without_omocodes():
 
 
 def test_decode_without_omocodes_from_command_line():
-    cmd = "python -m codicefiscale decode 'RSSMRA90A01H501W'"
+    cmd = "python -m codice_fiscale decode 'RSSMRA90A01H501W'"
     output = subprocess.check_output(cmd, shell=True).decode("UTF-8").strip()
     assert (
         output
@@ -581,7 +581,7 @@ def test_decode_with_wrong_code():
         run_with_args(args)
         output = fake_output.getvalue().strip()
         assert output == (
-            "[codicefiscale] wrong CIN (Control Internal Number): "
+            "[codice_fiscale] wrong CIN (Control Internal Number): "
             "expected 'W', found 'X'"
         )
 
@@ -598,7 +598,7 @@ def test_validate():
 
 
 def test_validate_from_command_line():
-    cmd = "python -m codicefiscale validate 'RSSMRA90A01H501W'"
+    cmd = "python -m codice_fiscale validate 'RSSMRA90A01H501W'"
     output = subprocess.check_output(cmd, shell=True).decode("UTF-8").strip()
     assert output == "✅"
 
@@ -615,6 +615,6 @@ def test_validate_with_wrong_code():
 
 
 def test_validate_with_wrong_code_from_command_line():
-    cmd = "python -m codicefiscale validate 'RSSMRA90A01H501X'"
+    cmd = "python -m codice_fiscale validate 'RSSMRA90A01H501X'"
     output = subprocess.check_output(cmd, shell=True).decode("UTF-8").strip()
     assert output == "❌"

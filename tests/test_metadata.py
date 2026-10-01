@@ -1,6 +1,6 @@
 import re
 
-from codicefiscale.metadata import (
+from codice_fiscale.metadata import (
     __author__,
     __copyright__,
     __description__,

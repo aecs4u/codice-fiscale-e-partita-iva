@@ -1,6 +1,6 @@
 import datetime
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 def test_issue_0162():
@@ -8,8 +8,8 @@ def test_issue_0162():
     Test for wrong birthplace code error (missing date-range in the data-source).
     """
     code = "DFLNTN42T20B860H"
-    assert codicefiscale.is_valid(code)
-    code_data = codicefiscale.decode(code)
+    assert codice_fiscale.is_valid(code)
+    code_data = codice_fiscale.decode(code)
     code_data.pop("omocodes")
     expected_code_data = {
         "code": "DFLNTN42T20B860H",

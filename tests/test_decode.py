@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 @pytest.fixture
@@ -310,7 +310,7 @@ def test_decode(decode_test_cases):
     """Test decoding fiscal codes."""
     for case in decode_test_cases:
         result = case["result"]
-        decoded = codicefiscale.decode(case["input"])
+        decoded = codice_fiscale.decode(case["input"])
 
         # check gender
         gender = decoded.get("gender")
@@ -335,22 +335,22 @@ def test_decode(decode_test_cases):
 def test_decode_invalid_syntax():
     """Test decoding with invalid syntax."""
     with pytest.raises(ValueError):
-        codicefiscale.decode("CC0FBA85X03L219P")  # invalid lastname
+        codice_fiscale.decode("CC0FBA85X03L219P")  # invalid lastname
     with pytest.raises(ValueError):
-        codicefiscale.decode("CCCFB085X03L219P")  # invalid firstname
+        codice_fiscale.decode("CCCFB085X03L219P")  # invalid firstname
     with pytest.raises(ValueError):
-        codicefiscale.decode("CCCFBA8XD03L219S")  # invalid date-year
+        codice_fiscale.decode("CCCFBA8XD03L219S")  # invalid date-year
     with pytest.raises(ValueError):
-        codicefiscale.decode("CCCFBA85X03L219P")  # invalid date-month
+        codice_fiscale.decode("CCCFBA85X03L219P")  # invalid date-month
     with pytest.raises(ValueError):
-        codicefiscale.decode("CCCFBA85D00L219P")  # invalid date-day
+        codice_fiscale.decode("CCCFBA85D00L219P")  # invalid date-day
 
 
 def test_decode_omocodia(decode_omocodia_test_cases):
     """Test decoding fiscal codes with omocodia."""
     for case in decode_omocodia_test_cases:
         result = case["result"]
-        decoded = codicefiscale.decode(case["input"])
+        decoded = codice_fiscale.decode(case["input"])
 
         # check gender
         gender = decoded.get("gender")
@@ -378,7 +378,7 @@ def test_decode_omocodia(decode_omocodia_test_cases):
 
 def test_decode_omocodes(decode_omocodes_test_case):
     """Test decoding fiscal codes and verifying omocodes."""
-    decoded = codicefiscale.decode(decode_omocodes_test_case["input"])
+    decoded = codice_fiscale.decode(decode_omocodes_test_case["input"])
     assert len(decoded["omocodes"]) == 128, "Expected 128 omocodes"
     assert decoded["omocodes"] == decode_omocodes_test_case["expected_omocodes"], (
         "Omocodes mismatch"
@@ -388,5 +388,5 @@ def test_decode_omocodes(decode_omocodes_test_case):
 def test_decode_with_invalid_birthplace():
     """Test decoding with an invalid birthplace."""
     code = "FRTMXM74L15D354A"
-    valid = codicefiscale.is_valid(code)
+    valid = codice_fiscale.is_valid(code)
     assert not valid, "Expected invalid fiscal code"

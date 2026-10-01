@@ -1,6 +1,6 @@
 import pytest
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ def test_is_omocode(omocode_test_cases):
     Test the `is_omocode` function to verify if a fiscal code is an omocode.
     """
     for fiscal_code, expected_result in omocode_test_cases:
-        assert codicefiscale.is_omocode(fiscal_code) == expected_result
+        assert codice_fiscale.is_omocode(fiscal_code) == expected_result
 
 
 def test_is_valid(valid_fiscal_code_test_cases):
@@ -44,4 +44,4 @@ def test_is_valid(valid_fiscal_code_test_cases):
     Test the `is_valid` function to verify if a fiscal code is valid.
     """
     for fiscal_code, expected_result in valid_fiscal_code_test_cases:
-        assert codicefiscale.is_valid(fiscal_code) == expected_result
+        assert codice_fiscale.is_valid(fiscal_code) == expected_result
