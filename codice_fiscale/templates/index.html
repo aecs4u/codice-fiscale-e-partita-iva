@@ -1,431 +1,550 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="fas fa-id-card me-3"></i>
-                    Italian Fiscal Code & VAT Validation
-                </h1>
-                <p class="lead mb-4">
-                    Validate, encode, and decode Italian fiscal codes (Codice Fiscale) and VAT numbers (Partita IVA) 
-                    with our powerful web interface powered by the python-codice_fiscale library.
-                </p>
-            </div>
-        </div>
+        <p class="eyebrow small fw-bold mb-2" data-i18n="eyebrow">Strumento gratuito</p>
+        <h1 class="display-5 fw-bold mb-3" data-i18n="heroTitle">Calcola e verifica i codici italiani</h1>
+        <p class="lead mb-0" data-i18n="heroIntro">Genera, verifica o decodifica un Codice Fiscale o una Partita IVA.</p>
     </div>
 </section>
 
-<div class="container my-5">
-    <!-- Authentication Status -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-lg-10">
-            <div class="auth-info {% if not auth_enabled %}auth-disabled{% endif %}">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-{% if auth_enabled %}lock{% else %}unlock{% endif %} me-3 fa-lg"></i>
-                    <div>
-                        <h6 class="mb-1">Authentication Status</h6>
-                        <small>
-                            {% if auth_enabled %}
-                                <i class="fas fa-check-circle me-1"></i>
-                                Authentication is <strong>enabled</strong> - API endpoints require valid JWT tokens
-                                {% if user %}
-                                    | Logged in as: <strong>{{ user.email or user.user_id }}</strong>
-                                {% endif %}
-                            {% else %}
-                                <i class="fas fa-info-circle me-1"></i>
-                                Authentication is <strong>disabled</strong> - All API endpoints are publicly accessible
-                            {% endif %}
-                        </small>
-                        {% if auth_enabled and not user %}
-                        <div class="mt-2">
-                            <small class="text-warning">
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                <strong>No active session detected.</strong> API calls from this interface may fail.
-                                <br>
-                                <strong>To authenticate:</strong>
-                                1. Set up <a href="https://clerk.com" target="_blank" class="text-warning">Clerk authentication</a>
-                                2. Get JWT token from your auth flow
-                                3. Include in API requests: <code>Authorization: Bearer &lt;token&gt;</code>
-                                <br>
-                                <a href="https://github.com/fabiocaccamo/python-codice_fiscale/blob/main/AUTHENTICATION.md" target="_blank" class="text-warning">
-                                    <i class="fas fa-external-link-alt me-1"></i>View authentication setup guide
-                                </a>
-                            </small>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+<div class="container app-shell pb-4">
+    {% if auth_enabled %}
+    <section class="notice-card p-3 p-md-4 mb-3" aria-labelledby="authHeading">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h2 class="h6 mb-1" id="authHeading" data-i18n="authHeading">Accesso richiesto</h2>
+                <p class="mb-0 text-muted" id="authStatus" role="status" aria-live="polite" data-i18n="authLoading">Verifica della sessione in corso…</p>
+                <span class="small fw-semibold" id="authUser" hidden></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" type="button" id="signInButton" disabled data-i18n="signIn">Accedi</button>
+                <button class="btn btn-outline-secondary" type="button" id="signOutButton" hidden data-i18n="signOut">Esci</button>
             </div>
         </div>
-    </div>
+    </section>
+    {% endif %}
 
-    <div class="row">
-        <!-- Fiscal Code Section -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-id-card me-2"></i>
-                        Codice Fiscale (Fiscal Code)
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h6>Validate Fiscal Code</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="fiscalCodeValidate" 
-                                   placeholder="e.g., CCCFBA85D03L219P" maxlength="16">
-                            <button class="btn btn-primary" type="button" onclick="validateFiscalCode()">
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id="fiscalValidateSpinner"></span>
-                                <i class="fas fa-check-circle me-1"></i>Validate
-                            </button>
-                        </div>
-                        <div id="fiscalValidateResult"></div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6>Generate Fiscal Code</h6>
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="form-control" id="gender" required>
-                                    <option value="">Gender</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="date" class="form-control" id="birthDate" required>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" id="birthPlace" placeholder="Birth Place" required>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary w-100" onclick="encodeFiscalCode()">
-                            <span class="spinner-border spinner-border-sm me-2 d-none" id="fiscalEncodeSpinner"></span>
-                            <i class="fas fa-plus-circle me-1"></i>Generate Fiscal Code
-                        </button>
-                        <div id="fiscalEncodeResult"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <h6>Decode Fiscal Code</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="fiscalCodeDecode" 
-                                   placeholder="e.g., CCCFBA85D03L219P" maxlength="16">
-                            <button class="btn btn-primary" type="button" onclick="decodeFiscalCode()">
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id="fiscalDecodeSpinner"></span>
-                                <i class="fas fa-search me-1"></i>Decode
-                            </button>
-                        </div>
-                        <div id="fiscalDecodeResult"></div>
-                    </div>
-                </div>
+    <section class="tool-card" aria-labelledby="toolHeading">
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+            <div>
+                <h2 class="h4 mb-1" id="toolHeading" data-i18n="toolTitle">Scegli cosa ti serve</h2>
+                <p class="text-muted mb-0" data-i18n="toolIntro">Seleziona un documento e poi un’operazione.</p>
             </div>
         </div>
 
-        <!-- VAT Number Section -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-building me-2"></i>
-                        Partita IVA (VAT Number)
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h6>Validate VAT Number</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="vatValidate" 
-                                   placeholder="e.g., 12345678901" maxlength="11">
-                            <button class="btn btn-primary" type="button" onclick="validateVat()">
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id="vatValidateSpinner"></span>
-                                <i class="fas fa-check-circle me-1"></i>Validate
-                            </button>
-                        </div>
-                        <div id="vatValidateResult"></div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6>Generate VAT Number</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="vatBaseNumber" 
-                                   placeholder="First 10 digits (e.g., 1234567890)" maxlength="10">
-                            <button class="btn btn-primary" type="button" onclick="encodeVat()">
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id="vatEncodeSpinner"></span>
-                                <i class="fas fa-plus-circle me-1"></i>Generate VAT
-                            </button>
-                        </div>
-                        <div id="vatEncodeResult"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <h6>Decode VAT Number</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="vatDecode" 
-                                   placeholder="e.g., 12345678901" maxlength="11">
-                            <button class="btn btn-primary" type="button" onclick="decodeVat()">
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id="vatDecodeSpinner"></span>
-                                <i class="fas fa-search me-1"></i>Decode
-                            </button>
-                        </div>
-                        <div id="vatDecodeResult"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="nav nav-pills mb-4" role="tablist" aria-label="Documento" data-i18n-aria-label="documentTabsLabel">
+            <button class="nav-link active" type="button" id="fiscalTab" role="tab" aria-selected="true" aria-controls="fiscalPanel" tabindex="0" data-service="fiscal" data-i18n="fiscalCode">Codice Fiscale</button>
+            <button class="nav-link" type="button" id="vatTab" role="tab" aria-selected="false" aria-controls="vatPanel" tabindex="-1" data-service="vat" data-i18n="vatNumber">Partita IVA</button>
         </div>
-    </div>
 
-    <!-- API Information -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-lg-10">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i>
-                        API Information
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">This web interface uses the REST API endpoints. You can also access them directly:</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <strong>Fiscal Code Endpoints:</strong>
-                            <ul class="list-unstyled mt-2">
-                                <li><code>POST /fiscal-code/validate</code></li>
-                                <li><code>POST /fiscal-code/encode</code></li>
-                                <li><code>POST /fiscal-code/decode</code></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>VAT Number Endpoints:</strong>
-                            <ul class="list-unstyled mt-2">
-                                <li><code>POST /vat/validate</code></li>
-                                <li><code>POST /vat/encode</code></li>
-                                <li><code>POST /vat/decode</code></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    {% if auth_enabled %}
-                    <div class="alert alert-warning mt-3">
-                        <h6><i class="fas fa-lock me-2"></i>Authentication Required</h6>
-                        <p class="mb-2">All endpoints require a valid JWT Bearer token:</p>
-                        <pre class="mb-2"><code>curl -X POST "http://localhost:8000/fiscal-code/validate" \
-  -H "Authorization: Bearer &lt;your-jwt-token&gt;" \
-  -H "Content-Type: application/json" \
-  -d '{"code": "CCCFBA85D03L219P"}'</code></pre>
-                        <small>
-                            <i class="fas fa-info-circle me-1"></i>
-                            See the <a href="https://github.com/fabiocaccamo/python-codice_fiscale/blob/main/AUTHENTICATION.md" target="_blank">authentication setup guide</a> 
-                            for complete instructions on obtaining JWT tokens.
-                        </small>
-                    </div>
-                    {% else %}
-                    <div class="alert alert-info mt-3">
-                        <h6><i class="fas fa-unlock me-2"></i>No Authentication Required</h6>
-                        <p class="mb-2">All endpoints are publicly accessible:</p>
-                        <pre class="mb-0"><code>curl -X POST "http://localhost:8000/fiscal-code/validate" \
-  -H "Content-Type: application/json" \
-  -d '{"code": "CCCFBA85D03L219P"}'</code></pre>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="mt-3">
-                        <a href="/docs" target="_blank" class="btn btn-outline-primary me-2">
-                            <i class="fas fa-book me-1"></i>Full API Documentation
-                        </a>
-                        <a href="/health" target="_blank" class="btn btn-outline-success me-2">
-                            <i class="fas fa-heartbeat me-1"></i>Health Check
-                        </a>
-                        <a href="https://github.com/fabiocaccamo/python-codice_fiscale/blob/main/AUTHENTICATION.md" target="_blank" class="btn btn-outline-info">
-                            <i class="fas fa-key me-1"></i>Auth Setup Guide
-                        </a>
-                    </div>
-                </div>
+        <section id="fiscalPanel" role="tabpanel" aria-labelledby="fiscalTab">
+            <div class="nav task-tabs mb-4" role="tablist" aria-label="Operazione" data-i18n-aria-label="operationTabsLabel">
+                <button class="nav-link active" type="button" id="fiscal-validate-tab" role="tab" aria-selected="true" aria-controls="fiscal-validate" data-service="fiscal" data-task="validate" data-i18n="validate">Verifica</button>
+                <button class="nav-link" type="button" id="fiscal-generate-tab" role="tab" aria-selected="false" aria-controls="fiscal-generate" data-service="fiscal" data-task="generate" data-i18n="generate">Genera</button>
+                <button class="nav-link" type="button" id="fiscal-decode-tab" role="tab" aria-selected="false" aria-controls="fiscal-decode" data-service="fiscal" data-task="decode" data-i18n="decode">Decodifica</button>
             </div>
+
+            <form id="fiscal-validate" class="task-panel" role="tabpanel" aria-labelledby="fiscal-validate-tab" data-service="fiscal" data-task-panel="validate" novalidate>
+                <h3 class="h5" data-i18n="fiscalValidateTitle">Verifica un Codice Fiscale</h3>
+                <label class="form-label" for="fiscalCodeValidate" data-i18n="fiscalCodeLabel">Codice Fiscale</label>
+                <div class="input-group">
+                    <input class="form-control" id="fiscalCodeValidate" name="code" type="text" maxlength="16" minlength="16" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="fiscalValidateHint" placeholder="Es. CCCFBA85D03L219P" data-i18n-placeholder="fiscalPlaceholder">
+                    <button class="btn btn-primary" type="submit" data-api-action data-i18n="validateButton" {% if auth_enabled %}disabled{% endif %}>Verifica</button>
+                </div>
+                <p class="form-text" id="fiscalValidateHint" data-i18n="fiscalFormatHint">Inserisci 16 caratteri.</p>
+                <div class="sr-status" id="fiscalValidateResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+
+            <form id="fiscal-generate" class="task-panel" role="tabpanel" aria-labelledby="fiscal-generate-tab" data-service="fiscal" data-task-panel="generate" hidden novalidate>
+                <h3 class="h5" data-i18n="fiscalGenerateTitle">Genera un Codice Fiscale</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="lastName" data-i18n="lastName">Cognome</label>
+                        <input class="form-control" id="lastName" name="lastname" type="text" autocomplete="family-name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="firstName" data-i18n="firstName">Nome</label>
+                        <input class="form-control" id="firstName" name="firstname" type="text" autocomplete="given-name" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" for="gender" data-i18n="gender">Sesso riportato nei dati anagrafici</label>
+                        <select class="form-select" id="gender" name="gender" required>
+                            <option value="" data-i18n="chooseGender">Seleziona</option>
+                            <option value="M" data-i18n="male">Maschile (M)</option>
+                            <option value="F" data-i18n="female">Femminile (F)</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" for="birthDate" data-i18n="birthDate">Data di nascita</label>
+                        <input class="form-control" id="birthDate" name="birthdate" type="date" autocomplete="bday" required>
+                    </div>
+                    <div class="col-sm-4 position-relative">
+                        <label class="form-label" for="birthPlace" data-i18n="birthPlace">Comune o Paese di nascita</label>
+                        <input class="form-control" id="birthPlace" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="birthplaceOptions" aria-describedby="birthplaceHint" required>
+                        <input id="birthPlaceValue" name="birthplace" type="hidden">
+                        <div class="suggestion-list" id="birthplaceOptions" role="listbox" hidden></div>
+                        <p class="form-text mb-0" id="birthplaceHint" role="status" aria-live="polite" data-i18n="birthplaceHint">Scrivi almeno 2 lettere e seleziona un suggerimento.</p>
+                    </div>
+                </div>
+                <p class="form-text mt-3" data-i18n="historicHint">Per i comuni storici viene considerata la data di nascita.</p>
+                <button class="btn btn-primary mt-2" type="submit" data-api-action data-i18n="generateFiscalButton" {% if auth_enabled %}disabled{% endif %}>Genera Codice Fiscale</button>
+                <div class="sr-status" id="fiscalEncodeResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+
+            <form id="fiscal-decode" class="task-panel" role="tabpanel" aria-labelledby="fiscal-decode-tab" data-service="fiscal" data-task-panel="decode" hidden novalidate>
+                <h3 class="h5" data-i18n="fiscalDecodeTitle">Decodifica un Codice Fiscale</h3>
+                <label class="form-label" for="fiscalCodeDecode" data-i18n="fiscalCodeLabel">Codice Fiscale</label>
+                <div class="input-group">
+                    <input class="form-control" id="fiscalCodeDecode" name="code" type="text" maxlength="16" minlength="16" autocomplete="off" autocapitalize="characters" spellcheck="false" required placeholder="Es. CCCFBA85D03L219P" data-i18n-placeholder="fiscalPlaceholder">
+                    <button class="btn btn-primary" type="submit" data-api-action data-i18n="decodeButton" {% if auth_enabled %}disabled{% endif %}>Decodifica</button>
+                </div>
+                <div class="sr-status" id="fiscalDecodeResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+        </section>
+
+        <section id="vatPanel" role="tabpanel" aria-labelledby="vatTab" hidden>
+            <div class="nav task-tabs mb-4" role="tablist" aria-label="Operazione" data-i18n-aria-label="operationTabsLabel">
+                <button class="nav-link active" type="button" id="vat-validate-tab" role="tab" aria-selected="true" aria-controls="vat-validate" data-service="vat" data-task="validate" data-i18n="validate">Verifica</button>
+                <button class="nav-link" type="button" id="vat-generate-tab" role="tab" aria-selected="false" aria-controls="vat-generate" data-service="vat" data-task="generate" data-i18n="generate">Genera</button>
+                <button class="nav-link" type="button" id="vat-decode-tab" role="tab" aria-selected="false" aria-controls="vat-decode" data-service="vat" data-task="decode" data-i18n="decode">Decodifica</button>
+            </div>
+
+            <form id="vat-validate" class="task-panel" role="tabpanel" aria-labelledby="vat-validate-tab" data-service="vat" data-task-panel="validate" novalidate>
+                <h3 class="h5" data-i18n="vatValidateTitle">Verifica una Partita IVA</h3>
+                <label class="form-label" for="vatValidate" data-i18n="vatNumber">Partita IVA</label>
+                <div class="input-group">
+                    <input class="form-control" id="vatValidate" name="partita_iva" type="text" inputmode="numeric" pattern="[0-9]{11}" minlength="11" maxlength="11" autocomplete="off" required placeholder="Es. 01234567890" data-i18n-placeholder="vatPlaceholder">
+                    <button class="btn btn-primary" type="submit" data-api-action data-i18n="validateButton" {% if auth_enabled %}disabled{% endif %}>Verifica</button>
+                </div>
+                <p class="form-text" data-i18n="vatFormatHint">Inserisci 11 cifre.</p>
+                <div class="sr-status" id="vatValidateResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+
+            <form id="vat-generate" class="task-panel" role="tabpanel" aria-labelledby="vat-generate-tab" data-service="vat" data-task-panel="generate" hidden novalidate>
+                <h3 class="h5" data-i18n="vatGenerateTitle">Completa una Partita IVA</h3>
+                <label class="form-label" for="vatBaseNumber" data-i18n="vatBaseLabel">Prime 10 cifre</label>
+                <div class="input-group">
+                    <input class="form-control" id="vatBaseNumber" name="base_number" type="text" inputmode="numeric" pattern="[0-9]{10}" minlength="10" maxlength="10" autocomplete="off" required placeholder="Es. 0123456789" data-i18n-placeholder="vatBasePlaceholder">
+                    <button class="btn btn-primary" type="submit" data-api-action data-i18n="generateVatButton" {% if auth_enabled %}disabled{% endif %}>Completa Partita IVA</button>
+                </div>
+                <div class="sr-status" id="vatEncodeResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+
+            <form id="vat-decode" class="task-panel" role="tabpanel" aria-labelledby="vat-decode-tab" data-service="vat" data-task-panel="decode" hidden novalidate>
+                <h3 class="h5" data-i18n="vatDecodeTitle">Decodifica una Partita IVA</h3>
+                <label class="form-label" for="vatDecode" data-i18n="vatNumber">Partita IVA</label>
+                <div class="input-group">
+                    <input class="form-control" id="vatDecode" name="partita_iva" type="text" inputmode="numeric" pattern="[0-9]{11}" minlength="11" maxlength="11" autocomplete="off" required placeholder="Es. 01234567890" data-i18n-placeholder="vatPlaceholder">
+                    <button class="btn btn-primary" type="submit" data-api-action data-i18n="decodeButton" {% if auth_enabled %}disabled{% endif %}>Decodifica</button>
+                </div>
+                <div class="sr-status" id="vatDecodeResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </form>
+        </section>
+    </section>
+
+    <section class="notice-card privacy-note p-3 p-md-4 mt-3" aria-labelledby="privacyHeading">
+        <h2 class="h6" id="privacyHeading" data-i18n="privacyHeading">Dati personali e privacy</h2>
+        <p class="mb-2" data-i18n="privacyText">Nome, cognome, data e luogo di nascita sono dati personali. L’app non li salva nello storage del browser. I dati inviati vengono elaborati dal servizio; la conservazione lato server dipende dalla distribuzione in uso. Il browser può applicare le proprie funzioni di compilazione automatica.</p>
+        <h3 class="h6 mt-3" data-i18n="accuracyHeading">Cosa verifica questo strumento</h3>
+        <p class="mb-0" data-i18n="accuracyText">La verifica controlla struttura e carattere di controllo; non interroga registri ufficiali né conferma che il codice sia stato attribuito a una persona. Un codice calcolato può differire da quello assegnato ufficialmente, per esempio in caso di omocodia.</p>
+    </section>
+
+    <details class="notice-card p-3 p-md-4 mt-3">
+        <summary class="fw-semibold" data-i18n="developerSummary">Documentazione API per sviluppatori</summary>
+        <p class="text-muted mt-3" data-i18n="developerText">L’interfaccia usa gli endpoint REST dello stesso servizio. La documentazione interattiva e l’elenco JSON sono disponibili qui:</p>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary" href="/docs" data-i18n="apiDocs">Documentazione API</a>
+            <a class="btn btn-outline-secondary" href="/api" data-i18n="apiInfo">Elenco endpoint</a>
         </div>
-    </div>
+        <ul class="small mt-3 mb-0">
+            <li><code>GET /birthplaces/search?q=...</code></li>
+            <li><code>POST /fiscal-code/validate|encode|decode</code></li>
+            <li><code>POST /vat/validate|encode|decode</code></li>
+        </ul>
+    </details>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-// Global configuration
-const API_BASE = '';
-let authToken = null; // Will be set if authentication is enabled
+const AUTH_ENABLED = {{ auth_enabled|tojson }};
+const CLERK_PUBLISHABLE_KEY = {{ clerk_publishable_key|default('', true)|tojson }};
+let activeLocale = 'it';
+let signedIn = !AUTH_ENABLED;
+let birthplaceSearchTimer;
+let birthplaceRequest;
+let activeSuggestion = -1;
 
-// Utility functions
-function showLoading(spinnerId) {
-    document.getElementById(spinnerId).classList.remove('d-none');
-}
-
-function hideLoading(spinnerId) {
-    document.getElementById(spinnerId).classList.add('d-none');
-}
-
-function showResult(containerId, content, isSuccess = true) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = `<div class="result-${isSuccess ? 'success' : 'error'}">${content}</div>`;
-}
-
-function formatResult(data) {
-    if (typeof data === 'object') {
-        return '<pre class="mb-0">' + JSON.stringify(data, null, 2) + '</pre>';
+const copy = {
+        it: {
+        pageTitle: 'Codice Fiscale e Partita IVA',
+        eyebrow: 'Strumento gratuito', heroTitle: 'Calcola e verifica i codici italiani', heroIntro: 'Genera, verifica o decodifica un Codice Fiscale o una Partita IVA.',
+        authHeading: 'Accesso richiesto', authLoading: 'Verifica della sessione in corso…', authSignInNeeded: 'Accedi per usare gli strumenti protetti da questo servizio.', authSignedIn: 'Accesso effettuato.', authUnavailable: 'Accesso non disponibile. Verifica la configurazione Clerk del servizio.', signIn: 'Accedi', signOut: 'Esci',
+        toolTitle: 'Scegli cosa ti serve', toolIntro: 'Seleziona un documento e poi un’operazione.', documentTabsLabel: 'Documento', operationTabsLabel: 'Operazione', fiscalCode: 'Codice Fiscale', vatNumber: 'Partita IVA', validate: 'Verifica', generate: 'Genera', decode: 'Decodifica',
+        fiscalValidateTitle: 'Verifica un Codice Fiscale', fiscalGenerateTitle: 'Genera un Codice Fiscale', fiscalDecodeTitle: 'Decodifica un Codice Fiscale', fiscalCodeLabel: 'Codice Fiscale', fiscalPlaceholder: 'Es. CCCFBA85D03L219P', fiscalFormatHint: 'Inserisci 16 caratteri.',
+        lastName: 'Cognome', firstName: 'Nome', gender: 'Sesso riportato nei dati anagrafici', chooseGender: 'Seleziona', male: 'Maschile (M)', female: 'Femminile (F)', birthDate: 'Data di nascita', birthPlace: 'Comune o Paese di nascita', birthplaceHint: 'Scrivi almeno 2 lettere e seleziona un suggerimento.', country: 'Paese', historicHint: 'Per i comuni storici viene considerata la data di nascita.', generateFiscalButton: 'Genera Codice Fiscale',
+        validateButton: 'Verifica', decodeButton: 'Decodifica', vatValidateTitle: 'Verifica una Partita IVA', vatGenerateTitle: 'Completa una Partita IVA', vatDecodeTitle: 'Decodifica una Partita IVA', vatPlaceholder: 'Es. 01234567890', vatFormatHint: 'Inserisci 11 cifre.', vatBaseLabel: 'Prime 10 cifre', vatBasePlaceholder: 'Es. 0123456789', generateVatButton: 'Completa Partita IVA',
+        privacyHeading: 'Dati personali e privacy', privacyText: 'Nome, cognome, data e luogo di nascita sono dati personali. L’app non li salva nello storage del browser. I dati inviati vengono elaborati dal servizio; la conservazione lato server dipende dalla distribuzione in uso. Il browser può applicare le proprie funzioni di compilazione automatica.', accuracyHeading: 'Cosa verifica questo strumento', accuracyText: 'La verifica controlla struttura e carattere di controllo; non interroga registri ufficiali né conferma che il codice sia stato attribuito a una persona. Un codice calcolato può differire da quello assegnato ufficialmente, per esempio in caso di omocodia.', developerSummary: 'Documentazione API per sviluppatori', developerText: 'L’interfaccia usa gli endpoint REST dello stesso servizio. La documentazione interattiva e l’elenco JSON sono disponibili qui:', apiDocs: 'Documentazione API', apiInfo: 'Elenco endpoint',
+        enterValue: 'Inserisci un valore.', chooseBirthplace: 'Seleziona un comune o un Paese dai suggerimenti.', loading: 'Caricamento…', noSuggestions: 'Nessun luogo trovato.', networkError: 'Errore di rete', copyCode: 'Copia codice', copied: 'Codice copiato.', copyFailed: 'Impossibile copiare il codice.'
+    },
+        en: {
+        pageTitle: 'Italian Fiscal Code and VAT',
+        eyebrow: 'Free tool', heroTitle: 'Calculate and check Italian codes', heroIntro: 'Generate, validate, or decode a fiscal code or VAT number.',
+        authHeading: 'Sign-in required', authLoading: 'Checking your session…', authSignInNeeded: 'Sign in to use the tools protected by this service.', authSignedIn: 'You are signed in.', authUnavailable: 'Sign-in is unavailable. Check this service’s Clerk configuration.', signIn: 'Sign in', signOut: 'Sign out',
+        toolTitle: 'What do you need to do?', toolIntro: 'Choose a document, then an action.', documentTabsLabel: 'Document', operationTabsLabel: 'Action', fiscalCode: 'Fiscal code', vatNumber: 'VAT number', validate: 'Validate', generate: 'Generate', decode: 'Decode',
+        fiscalValidateTitle: 'Validate a fiscal code', fiscalGenerateTitle: 'Generate a fiscal code', fiscalDecodeTitle: 'Decode a fiscal code', fiscalCodeLabel: 'Fiscal code', fiscalPlaceholder: 'e.g. CCCFBA85D03L219P', fiscalFormatHint: 'Enter 16 characters.',
+        lastName: 'Last name', firstName: 'First name', gender: 'Gender in the registry data', chooseGender: 'Choose', male: 'Male (M)', female: 'Female (F)', birthDate: 'Date of birth', birthPlace: 'Municipality or country of birth', birthplaceHint: 'Type at least 2 letters and select a suggestion.', country: 'Country', historicHint: 'For historical municipalities, the date of birth is used to choose the code.', generateFiscalButton: 'Generate fiscal code',
+        validateButton: 'Validate', decodeButton: 'Decode', vatValidateTitle: 'Validate a VAT number', vatGenerateTitle: 'Complete a VAT number', vatDecodeTitle: 'Decode a VAT number', vatPlaceholder: 'e.g. 01234567890', vatFormatHint: 'Enter 11 digits.', vatBaseLabel: 'First 10 digits', vatBasePlaceholder: 'e.g. 0123456789', generateVatButton: 'Complete VAT number',
+        privacyHeading: 'Personal data and privacy', privacyText: 'Name, date of birth, and place of birth are personal data. The app does not save them in browser storage. Submitted fields are processed by the service; server-side retention depends on the deployment you are using. Your browser may apply its own autofill settings.', accuracyHeading: 'What this tool checks', accuracyText: 'Validation checks structure and the check character; it does not query official records or confirm that a code was assigned to a person. A calculated code may differ from the one officially assigned, for example in an omocodia case.', developerSummary: 'API documentation for developers', developerText: 'This interface uses REST endpoints on the same service. Interactive documentation and the JSON endpoint list are available here:', apiDocs: 'API documentation', apiInfo: 'Endpoint list',
+        enterValue: 'Enter a value.', chooseBirthplace: 'Select a municipality or country from the suggestions.', loading: 'Loading…', noSuggestions: 'No places found.', networkError: 'Network error', copyCode: 'Copy code', copied: 'Code copied.', copyFailed: 'Could not copy the code.'
     }
-    return data;
+};
+
+function t(key) {
+    return copy[activeLocale][key] || key;
 }
 
-async function makeApiCall(endpoint, data, spinnerId, resultId) {
-    showLoading(spinnerId);
-    
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-    
-    // Add auth header if we have a token
-    if (authToken) {
-        headers['Authorization'] = `Bearer ${authToken}`;
-    }
-    
-    try {
-        const response = await fetch(API_BASE + endpoint, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-            showResult(resultId, formatResult(result), true);
+function applyLocale(locale) {
+    activeLocale = locale;
+    document.documentElement.lang = locale;
+    document.title = t('pageTitle');
+    document.querySelectorAll('[data-i18n]').forEach((element) => {
+        const value = t(element.dataset.i18n);
+        if (element instanceof HTMLButtonElement && element.querySelector('[data-spinner]')) {
+            element.querySelector('[data-button-label]').textContent = value;
+            element.dataset.label = value;
         } else {
-            showResult(resultId, `Error: ${result.detail || 'Unknown error'}`, false);
+            element.textContent = value;
         }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+        element.placeholder = t(element.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+        element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel));
+    });
+    document.getElementById('languageToggle').textContent = locale === 'it' ? 'English' : 'Italiano';
+    document.getElementById('languageToggle').setAttribute('aria-label', locale === 'it' ? 'Switch to English' : 'Passa all’italiano');
+}
+
+function setService(service) {
+    document.querySelectorAll('[data-service][role="tab"]').forEach((tab) => {
+        if (tab.dataset.task) return;
+        const selected = tab.dataset.service === service;
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+    });
+    document.getElementById('fiscalPanel').hidden = service !== 'fiscal';
+    document.getElementById('vatPanel').hidden = service !== 'vat';
+}
+
+function setTask(service, task) {
+    document.querySelectorAll(`[data-service="${service}"][data-task]`).forEach((tab) => {
+        const selected = tab.dataset.task === task;
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+    });
+    document.querySelectorAll(`[data-service="${service}"][data-task-panel]`).forEach((panel) => {
+        panel.hidden = panel.dataset.taskPanel !== task;
+    });
+}
+
+function showResult(containerId, result, isSuccess = true) {
+    const container = document.getElementById(containerId);
+    container.replaceChildren();
+    const box = document.createElement('div');
+    box.className = `result-box ${isSuccess ? 'result-success' : 'result-error'}`;
+    const pre = document.createElement('pre');
+    pre.textContent = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+    box.append(pre);
+    const resultCode = result && (result.code || result.partita_iva);
+    if (isSuccess && resultCode) {
+        const copyButton = document.createElement('button');
+        copyButton.className = 'btn btn-sm btn-outline-primary mt-2';
+        copyButton.type = 'button';
+        copyButton.textContent = t('copyCode');
+        copyButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(resultCode);
+                copyButton.textContent = t('copied');
+            } catch (_) {
+                copyButton.textContent = t('copyFailed');
+            }
+        });
+        box.append(copyButton);
+    }
+    container.append(box);
+}
+
+async function makeApiCall(form, endpoint, data, resultId) {
+    if (AUTH_ENABLED && !signedIn) return;
+    const button = form.querySelector('[type="submit"]');
+    const spinner = button.querySelector('[data-spinner]');
+    const label = button.querySelector('[data-button-label]');
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    spinner.hidden = false;
+    label.textContent = t('loading');
+    showResult(resultId, t('loading'), true);
+    try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (AUTH_ENABLED) {
+            const token = window.Clerk?.session ? await window.Clerk.session.getToken() : null;
+            if (!token) throw new Error(t('authSignInNeeded'));
+            headers.Authorization = `Bearer ${token}`;
+        }
+        const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(data) });
+        let result;
+        try {
+            result = await response.json();
+        } catch (_) {
+            result = { detail: `${t('networkError')} (${response.status})` };
+        }
+        const valid = !(result && result.valid === false);
+        showResult(resultId, response.ok ? result : result.detail || result, response.ok && valid);
     } catch (error) {
-        showResult(resultId, `Network Error: ${error.message}`, false);
+        showResult(resultId, error.message || t('networkError'), false);
     } finally {
-        hideLoading(spinnerId);
+        button.disabled = AUTH_ENABLED && !signedIn;
+        button.setAttribute('aria-busy', 'false');
+        spinner.hidden = true;
+        label.textContent = button.dataset.label;
     }
 }
 
-// Fiscal Code functions
-function validateFiscalCode() {
-    const code = document.getElementById('fiscalCodeValidate').value.trim();
-    if (!code) {
-        showResult('fiscalValidateResult', 'Please enter a fiscal code', false);
-        return;
-    }
-    makeApiCall('/fiscal-code/validate', { code }, 'fiscalValidateSpinner', 'fiscalValidateResult');
-}
-
-function encodeFiscalCode() {
-    const data = {
-        lastname: document.getElementById('lastName').value.trim(),
-        firstname: document.getElementById('firstName').value.trim(),
-        gender: document.getElementById('gender').value,
-        birthdate: document.getElementById('birthDate').value,
-        birthplace: document.getElementById('birthPlace').value.trim()
-    };
-    
-    // Validate required fields
-    if (!data.lastname || !data.firstname || !data.gender || !data.birthdate || !data.birthplace) {
-        showResult('fiscalEncodeResult', 'Please fill in all required fields', false);
-        return;
-    }
-    
-    makeApiCall('/fiscal-code/encode', data, 'fiscalEncodeSpinner', 'fiscalEncodeResult');
-}
-
-function decodeFiscalCode() {
-    const code = document.getElementById('fiscalCodeDecode').value.trim();
-    if (!code) {
-        showResult('fiscalDecodeResult', 'Please enter a fiscal code', false);
-        return;
-    }
-    makeApiCall('/fiscal-code/decode', { code }, 'fiscalDecodeSpinner', 'fiscalDecodeResult');
-}
-
-// VAT functions
-function validateVat() {
-    const partita_iva = document.getElementById('vatValidate').value.trim();
-    if (!partita_iva) {
-        showResult('vatValidateResult', 'Please enter a VAT number', false);
-        return;
-    }
-    makeApiCall('/vat/validate', { partita_iva }, 'vatValidateSpinner', 'vatValidateResult');
-}
-
-function encodeVat() {
-    const base_number = document.getElementById('vatBaseNumber').value.trim();
-    if (!base_number) {
-        showResult('vatEncodeResult', 'Please enter the first 10 digits', false);
-        return;
-    }
-    if (base_number.length !== 10) {
-        showResult('vatEncodeResult', 'Base number must be exactly 10 digits', false);
-        return;
-    }
-    makeApiCall('/vat/encode', { base_number }, 'vatEncodeSpinner', 'vatEncodeResult');
-}
-
-function decodeVat() {
-    const partita_iva = document.getElementById('vatDecode').value.trim();
-    if (!partita_iva) {
-        showResult('vatDecodeResult', 'Please enter a VAT number', false);
-        return;
-    }
-    makeApiCall('/vat/decode', { partita_iva }, 'vatDecodeSpinner', 'vatDecodeResult');
-}
-
-// Handle Enter key in input fields
-document.addEventListener('DOMContentLoaded', function() {
-    // Add Enter key handlers
-    document.getElementById('fiscalCodeValidate').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') validateFiscalCode();
+function bindForm(id, endpoint, getData, resultId, beforeSubmit = null) {
+    const form = document.getElementById(id);
+    const button = form.querySelector('[type="submit"]');
+    const status = document.createElement('span');
+    status.dataset.spinner = '';
+    status.className = 'spinner-border spinner-border-sm me-2';
+    status.setAttribute('aria-hidden', 'true');
+    status.hidden = true;
+    const label = document.createElement('span');
+    label.dataset.buttonLabel = '';
+    label.textContent = button.textContent.trim();
+    button.dataset.label = label.textContent;
+    button.textContent = '';
+    button.append(status, label);
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        if (beforeSubmit && !beforeSubmit()) return;
+        makeApiCall(form, endpoint, getData(), resultId);
     });
-    
-    document.getElementById('fiscalCodeDecode').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') decodeFiscalCode();
+}
+
+function bindBirthplaceAutocomplete() {
+    const input = document.getElementById('birthPlace');
+    const value = document.getElementById('birthPlaceValue');
+    const list = document.getElementById('birthplaceOptions');
+    const hint = document.getElementById('birthplaceHint');
+    let suggestions = [];
+
+    function closeList() {
+        list.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        input.removeAttribute('aria-activedescendant');
+        activeSuggestion = -1;
+    }
+
+    function choose(index) {
+        const option = suggestions[index];
+        if (!option) return;
+        input.value = displayPlace(option);
+        value.value = option.value;
+        hint.textContent = option.period ? `${displayPlace(option)} · ${option.period}` : displayPlace(option);
+        closeList();
+    }
+
+    function displayPlace(option) {
+        return option.kind === 'country' ? `${option.label} (${t('country')})` : option.label;
+    }
+
+    function renderOptions(results) {
+        suggestions = results;
+        list.replaceChildren();
+        if (!results.length) {
+            const empty = document.createElement('div');
+            empty.className = 'suggestion-option text-muted';
+            empty.setAttribute('role', 'option');
+            empty.setAttribute('aria-disabled', 'true');
+            empty.textContent = t('noSuggestions');
+            list.append(empty);
+        } else {
+            results.forEach((option, index) => {
+                const row = document.createElement('div');
+                row.id = `birthplace-option-${index}`;
+                row.className = 'suggestion-option';
+                row.setAttribute('role', 'option');
+                row.setAttribute('aria-selected', 'false');
+                const label = displayPlace(option);
+                row.textContent = option.period ? `${label} · ${option.period}` : label;
+                row.addEventListener('mousedown', (event) => event.preventDefault());
+                row.addEventListener('click', () => choose(index));
+                list.append(row);
+            });
+        }
+        list.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+    }
+
+    input.addEventListener('input', () => {
+        value.value = '';
+        hint.textContent = t('birthplaceHint');
+        clearTimeout(birthplaceSearchTimer);
+        if (birthplaceRequest) birthplaceRequest.abort();
+        const query = input.value.trim();
+        if (query.length < 2) {
+            closeList();
+            return;
+        }
+        birthplaceSearchTimer = setTimeout(async () => {
+            birthplaceRequest = new AbortController();
+            try {
+                const response = await fetch(`/birthplaces/search?q=${encodeURIComponent(query)}`, { signal: birthplaceRequest.signal });
+                if (!response.ok) throw new Error('Search failed');
+                const data = await response.json();
+                renderOptions(data.results || []);
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    hint.textContent = t('networkError');
+                    closeList();
+                }
+            }
+        }, 180);
     });
-    
-    document.getElementById('vatValidate').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') validateVat();
+
+    input.addEventListener('keydown', (event) => {
+        if (list.hidden) return;
+        if (!suggestions.length) return;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (activeSuggestion < 0) {
+                activeSuggestion = event.key === 'ArrowDown' ? 0 : suggestions.length - 1;
+            } else {
+                activeSuggestion = (activeSuggestion + (event.key === 'ArrowDown' ? 1 : -1) + suggestions.length) % suggestions.length;
+            }
+            list.querySelectorAll('[role="option"]').forEach((option, index) => {
+                option.setAttribute('aria-selected', String(index === activeSuggestion));
+            });
+            const active = document.getElementById(`birthplace-option-${activeSuggestion}`);
+            if (active) {
+                input.setAttribute('aria-activedescendant', active.id);
+                active.scrollIntoView({ block: 'nearest' });
+            }
+        } else if (event.key === 'Enter' && activeSuggestion >= 0) {
+            event.preventDefault();
+            choose(activeSuggestion);
+        } else if (event.key === 'Escape') {
+            closeList();
+        }
     });
-    
-    document.getElementById('vatBaseNumber').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') encodeVat();
+    input.addEventListener('blur', () => setTimeout(closeList, 120));
+}
+
+function setAuthState(isSignedIn, user) {
+    signedIn = isSignedIn;
+    const status = document.getElementById('authStatus');
+    if (!status) return;
+    status.dataset.i18n = signedIn ? 'authSignedIn' : 'authSignInNeeded';
+    status.textContent = t(status.dataset.i18n);
+    const userLabel = document.getElementById('authUser');
+    const email = user?.primaryEmailAddress?.emailAddress;
+    userLabel.textContent = email || '';
+    userLabel.hidden = !signedIn || !email;
+    document.getElementById('signInButton').hidden = signedIn;
+    document.getElementById('signOutButton').hidden = !signedIn;
+    document.querySelectorAll('[data-api-action]').forEach((button) => {
+        button.disabled = button.getAttribute('aria-busy') === 'true' || (AUTH_ENABLED && !signedIn);
     });
-    
-    document.getElementById('vatDecode').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') decodeVat();
-    });
-    
-    // Auto-uppercase fiscal codes
-    const fiscalInputs = ['fiscalCodeValidate', 'fiscalCodeDecode'];
-    fiscalInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', function() {
-            this.value = this.value.toUpperCase();
+}
+
+async function loadClerk() {
+    if (!AUTH_ENABLED) return;
+    const status = document.getElementById('authStatus');
+    try {
+        if (!CLERK_PUBLISHABLE_KEY) throw new Error('Missing publishable key');
+        const clerkDomain = atob(CLERK_PUBLISHABLE_KEY.split('_')[2]).slice(0, -1);
+        const loadScript = (src, attributes = {}) => new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            Object.entries(attributes).forEach(([key, value]) => script.setAttribute(key, value));
+            script.onload = resolve;
+            script.onerror = () => reject(new Error('Clerk could not be loaded'));
+            document.head.append(script);
         });
-    });
-    
-    // Only allow digits in VAT inputs
-    const vatInputs = ['vatValidate', 'vatBaseNumber', 'vatDecode'];
-    vatInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-        });
+        await loadScript(`https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`);
+        await loadScript(`https://${clerkDomain}/npm/@clerk/clerk-js@6/dist/clerk.browser.js`, { 'data-clerk-publishable-key': CLERK_PUBLISHABLE_KEY });
+        await window.Clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } });
+        document.getElementById('signInButton').disabled = false;
+        window.Clerk.addListener(({ user, session }) => setAuthState(Boolean(user && session), user));
+    } catch (_) {
+        status.dataset.i18n = 'authUnavailable';
+        status.textContent = t('authUnavailable');
+        document.getElementById('signInButton').disabled = true;
+    }
+}
+
+document.getElementById('languageToggle').addEventListener('click', () => applyLocale(activeLocale === 'it' ? 'en' : 'it'));
+document.querySelectorAll('[data-service][role="tab"]').forEach((tab) => {
+    tab.addEventListener('click', () => setService(tab.dataset.service));
+    tab.addEventListener('keydown', (event) => {
+        if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+        event.preventDefault();
+        const tabs = [...document.querySelectorAll('[data-service][role="tab"]')].filter((item) => !item.dataset.task);
+        const current = tabs.indexOf(tab);
+        const next = tabs[(current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+        next.focus();
+        setService(next.dataset.service);
     });
 });
+document.querySelectorAll('[data-task]').forEach((tab) => tab.addEventListener('click', () => setTask(tab.dataset.service, tab.dataset.task)));
+document.querySelectorAll('[data-task][role="tab"]').forEach((tab) => {
+    tab.addEventListener('keydown', (event) => {
+        if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
+        event.preventDefault();
+        const tabs = [...document.querySelectorAll(`[data-service="${tab.dataset.service}"][data-task][role="tab"]`)];
+        const current = tabs.indexOf(tab);
+        const next = tabs[(current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+        next.focus();
+        setTask(next.dataset.service, next.dataset.task);
+    });
+});
+
+bindForm('fiscal-validate', '/fiscal-code/validate', () => ({ code: document.getElementById('fiscalCodeValidate').value.trim().toUpperCase() }), 'fiscalValidateResult');
+bindForm('fiscal-generate', '/fiscal-code/encode', () => ({
+    lastname: document.getElementById('lastName').value.trim(),
+    firstname: document.getElementById('firstName').value.trim(),
+    gender: document.getElementById('gender').value,
+    birthdate: document.getElementById('birthDate').value,
+    birthplace: document.getElementById('birthPlaceValue').value
+}), 'fiscalEncodeResult', () => {
+    const selected = Boolean(document.getElementById('birthPlaceValue').value);
+    if (!selected) {
+        document.getElementById('birthplaceHint').textContent = t('chooseBirthplace');
+        document.getElementById('birthPlace').focus();
+    }
+    return selected;
+});
+bindForm('fiscal-decode', '/fiscal-code/decode', () => ({ code: document.getElementById('fiscalCodeDecode').value.trim().toUpperCase() }), 'fiscalDecodeResult');
+bindForm('vat-validate', '/vat/validate', () => ({ partita_iva: document.getElementById('vatValidate').value.trim() }), 'vatValidateResult');
+bindForm('vat-generate', '/vat/encode', () => ({ base_number: document.getElementById('vatBaseNumber').value.trim() }), 'vatEncodeResult');
+bindForm('vat-decode', '/vat/decode', () => ({ partita_iva: document.getElementById('vatDecode').value.trim() }), 'vatDecodeResult');
+bindBirthplaceAutocomplete();
+applyLocale('it');
+setService('fiscal');
+setTask('fiscal', 'validate');
+setTask('vat', 'validate');
+
+document.getElementById('signInButton')?.addEventListener('click', () => window.Clerk?.openSignIn());
+document.getElementById('signOutButton')?.addEventListener('click', async () => window.Clerk?.signOut({ redirectUrl: window.location.pathname }));
+loadClerk();
 </script>
 {% endblock %}

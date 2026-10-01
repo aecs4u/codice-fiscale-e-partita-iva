@@ -7,6 +7,7 @@ This module creates a FastAPI app that works in both development and cloud envir
 from __future__ import annotations
 
 import os
+from functools import lru_cache
 from typing import Any
 
 # Check if we're running in a cloud environment
@@ -16,7 +17,7 @@ try:
     from contextlib import asynccontextmanager
 
     from dotenv import load_dotenv
-    from fastapi import Depends, FastAPI, HTTPException, Request
+    from fastapi import Depends, FastAPI, HTTPException, Query, Request
     from fastapi.responses import HTMLResponse, JSONResponse
     from fastapi.staticfiles import StaticFiles
     from fastapi.templating import Jinja2Templates
@@ -31,6 +32,8 @@ except ImportError as e:
         "FastAPI dependencies not installed. "
         "Install with: pip install 'python-codice_fiscale[api]'"
     ) from e
+
+from slugify import slugify
 
 from . import codice_fiscale, partitaiva
 
@@ -139,22 +142,104 @@ else:
     optional_auth_dependency = Depends(no_auth)
 
 
-@app.get("/", response_class=HTMLResponse if templates and not IS_CLOUD_DEPLOYMENT else JSONResponse)
-async def root(request: Request = None, auth_data: dict[str, Any] = optional_auth_dependency):
-    """Root endpoint - web interface in development, API info in cloud deployments."""
-    # In cloud deployments, prioritize JSON API response
-    # if IS_CLOUD_DEPLOYMENT or templates is None:
-    #     return await api_info(auth_data)
+@app.get("/", response_class=HTMLResponse if templates else JSONResponse)
+async def root(request: Request):
+    """Serve the web tool; API discovery is available at ``/api`` and ``/docs``."""
+    if templates is None:
+        return await api_info({})
 
-    # In development, show web interface
-    user_info = None
-    if AUTH_ENABLED and auth_data and "sub" in auth_data:
-        user_info = get_user_metadata(auth_data)
+    clerk_publishable_key = (
+        _get_non_empty_env("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY")
+        or _get_non_empty_env("CLERK_PUBLISHABLE_KEY")
+        if AUTH_ENABLED
+        else ""
+    )
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "auth_enabled": AUTH_ENABLED,
+            "clerk_publishable_key": clerk_publishable_key,
+        },
+    )
 
-    return templates.TemplateResponse(request, "index.html", {
-        "auth_enabled": AUTH_ENABLED,
-        "user": user_info
-    })
+
+@lru_cache(maxsize=1)
+def _birthplace_search_index() -> tuple[dict[str, Any], ...]:
+    """Build suggestions from the birthplace records already indexed at import."""
+    indexed_places: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for kind in ("municipalities", "countries"):
+        for search_term, records in codice_fiscale._DATA[kind].items():
+            for record in records:
+                name = record.get("name_trans") or record["name"]
+                province = record.get("province", "")
+                identity = (
+                    kind,
+                    record["code"],
+                    record["name"],
+                    province,
+                    record.get("date_created", ""),
+                    record.get("date_deleted", ""),
+                )
+                place = indexed_places.get(identity)
+                if place is None:
+                    date_deleted = record.get("date_deleted") or ""
+                    period = ""
+                    if not record.get("active", kind == "countries"):
+                        period = (record.get("date_created") or "")[:4]
+                        if date_deleted:
+                            period = f"{period}–{date_deleted[:4]}"
+                    place = {
+                        "value": f"{name}, {province}" if province else name,
+                        "label": f"{name} ({province})" if province else name,
+                        "code": record["code"],
+                        "kind": "municipality" if kind == "municipalities" else "country",
+                        "active": bool(record.get("active", kind == "countries")),
+                        "period": period,
+                        "search_terms": set(),
+                    }
+                    indexed_places[identity] = place
+
+                normalized_term = slugify(str(search_term))
+                if normalized_term:
+                    place["search_terms"].add(normalized_term)
+
+    return tuple(
+        {**place, "search_terms": tuple(place["search_terms"])}
+        for place in indexed_places.values()
+    )
+
+
+@app.get("/birthplaces/search")
+async def search_birthplaces(
+    q: str = Query(..., min_length=2, max_length=80),
+    limit: int = Query(10, ge=1, le=20),
+):
+    """Search public municipality and country data for the web form."""
+    query = slugify(q)
+    if len(query) < 2:
+        return {"results": []}
+
+    matches = [
+        place
+        for place in _birthplace_search_index()
+        if any(query in term for term in place["search_terms"])
+    ]
+    matches.sort(
+        key=lambda place: (
+            not place["active"],
+            not any(query == term for term in place["search_terms"]),
+            not any(term.startswith(query) for term in place["search_terms"]),
+            len(place["label"]),
+            place["label"],
+        )
+    )
+    return {
+        "results": [
+            {key: value for key, value in place.items() if key != "search_terms"}
+            for place in matches[:limit]
+        ]
+    }
 
 
 @app.get("/api", response_class=JSONResponse)
@@ -169,6 +254,9 @@ async def api_info(auth_data: dict[str, Any] = optional_auth_dependency):
             "type": "Clerk JWT Bearer Token" if AUTH_ENABLED else "None",
         },
         "endpoints": {
+            "birthplaces": {
+                "search": "GET /birthplaces/search?q=<name>",
+            },
             "fiscal_code": {
                 "validate": "POST /fiscal-code/validate",
                 "encode": "POST /fiscal-code/encode",

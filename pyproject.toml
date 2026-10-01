@@ -141,7 +141,7 @@ packages = ["codice_fiscale", "codicefiscale"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-codice_fiscale = ["data/*.json"]
+codice_fiscale = ["data/*.json", "templates/*.html"]
 
 [dependency-groups]
 dev = [
