@@ -1,6 +1,6 @@
 import datetime
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 def test_issue_0079():
@@ -8,7 +8,7 @@ def test_issue_0079():
     Test for encoding and decoding fiscal codes
     when year of birth (excluding century) < 10 (e.g., 2004).
     """
-    code = codicefiscale.encode(
+    code = codice_fiscale.encode(
         lastname="Rossi",
         firstname="Mario",
         gender="M",
@@ -16,7 +16,7 @@ def test_issue_0079():
         birthplace="Torino",
     )
     assert code == "RSSMRA04S29L219G"
-    code_data = codicefiscale.decode("RSSMRA00S29L219C")
+    code_data = codice_fiscale.decode("RSSMRA00S29L219C")
     code_data.pop("omocodes")
     expected_code_data = {
         "code": "RSSMRA00S29L219C",

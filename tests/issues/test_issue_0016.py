@@ -1,11 +1,11 @@
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 def test_issue_0016():
     """
     Decode return GIRGENTI (soppresso) instead of AGRIGENTO
     """
-    data = codicefiscale.decode("LNNFNC80A01A089K")
+    data = codice_fiscale.decode("LNNFNC80A01A089K")
     expected_birthplace = {
         "code": "A089",
         "province": "AG",

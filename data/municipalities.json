@@ -9398,20 +9398,6 @@
     },
     {
         "active": false,
-        "code": "A355",
-        "date_created": "1928-01-01T00:00:00",
-        "date_deleted": "1928-05-11T00:00:00",
-        "name": "Arbatax Di Tortol\u00ec",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "arbatax-di-tortoli"
-        ],
-        "name_trans": "Arbatax Di Tortoli'",
-        "province": "NU"
-    },
-    {
-        "active": false,
         "code": "A356",
         "date_created": "1861-03-17T00:00:00",
         "date_deleted": "1927-01-11T00:00:00",
@@ -16353,20 +16339,6 @@
         "code": "A609",
         "date_created": "1947-03-30T00:00:00",
         "date_deleted": "1954-05-25T00:00:00",
-        "name": "Bannari Di Usellus",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "bannari-di-usellus"
-        ],
-        "name_trans": "Bannari Di Usellus",
-        "province": "CA"
-    },
-    {
-        "active": false,
-        "code": "A609",
-        "date_created": "1927-10-10T00:00:00",
-        "date_deleted": "1947-03-29T00:00:00",
         "name": "Bannari Di Usellus",
         "name_alt": "",
         "name_alt_trans": "",
@@ -32992,20 +32964,6 @@
     },
     {
         "active": false,
-        "code": "B250",
-        "date_created": "1925-01-01T00:00:00",
-        "date_deleted": "1960-03-11T00:00:00",
-        "name": "Buggerru",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "buggerru"
-        ],
-        "name_trans": "Buggerru",
-        "province": "CA"
-    },
-    {
-        "active": false,
         "code": "B251",
         "date_created": "1883-05-21T00:00:00",
         "date_deleted": "1928-01-25T00:00:00",
@@ -44192,20 +44150,6 @@
     },
     {
         "active": false,
-        "code": "B712",
-        "date_created": "1921-01-05T00:00:00",
-        "date_deleted": "1923-02-07T00:00:00",
-        "name": "Capriva",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "capriva"
-        ],
-        "name_trans": "Capriva",
-        "province": "GO"
-    },
-    {
-        "active": false,
         "code": "B713",
         "date_created": "1921-01-05T00:00:00",
         "date_deleted": "1923-02-07T00:00:00",
@@ -44217,6 +44161,20 @@
         ],
         "name_trans": "Capriva",
         "province": "TS"
+    },
+    {
+        "active": false,
+        "code": "B712",
+        "date_created": "1921-01-05T00:00:00",
+        "date_deleted": "1923-02-07T00:00:00",
+        "name": "Capriva",
+        "name_alt": "",
+        "name_alt_trans": "",
+        "name_slugs": [
+            "capriva"
+        ],
+        "name_trans": "Capriva",
+        "province": "GO"
     },
     {
         "active": false,
@@ -51711,10 +51669,10 @@
         "province": "BS"
     },
     {
-        "active": true,
+        "active": false,
         "code": "C056",
         "date_created": "1866-11-19T00:00:00",
-        "date_deleted": "",
+        "date_deleted": "2026-02-20T00:00:00",
         "name": "Castegnero",
         "name_alt": "",
         "name_alt_trans": "",
@@ -51722,6 +51680,20 @@
             "castegnero"
         ],
         "name_trans": "Castegnero",
+        "province": "VI"
+    },
+    {
+        "active": true,
+        "code": "M439",
+        "date_created": "2026-02-21T00:00:00",
+        "date_deleted": "",
+        "name": "Castegnero Nanto",
+        "name_alt": "",
+        "name_alt_trans": "Castegnero Nanto",
+        "name_slugs": [
+            "castegnero-nanto"
+        ],
+        "name_trans": "Castegnero Nanto",
         "province": "VI"
     },
     {
@@ -54155,20 +54127,6 @@
     },
     {
         "active": false,
-        "code": "C135",
-        "date_created": "1936-01-01T00:00:00",
-        "date_deleted": "1947-07-09T00:00:00",
-        "name": "Castellana Sicula",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "castellana-sicula"
-        ],
-        "name_trans": "Castellana Sicula",
-        "province": "PA"
-    },
-    {
-        "active": false,
         "code": "C136",
         "date_created": "1861-03-17T00:00:00",
         "date_deleted": "1923-12-21T00:00:00",
@@ -55107,7 +55065,7 @@
     },
     {
         "active": false,
-        "code": "C183",
+        "code": "C182",
         "date_created": "1920-10-16T00:00:00",
         "date_deleted": "1923-02-13T00:00:00",
         "name": "Castello",
@@ -55121,7 +55079,7 @@
     },
     {
         "active": false,
-        "code": "C182",
+        "code": "C183",
         "date_created": "1920-10-16T00:00:00",
         "date_deleted": "1923-02-13T00:00:00",
         "name": "Castello",
@@ -91711,7 +91669,7 @@
     {
         "active": true,
         "code": "D606",
-        "date_created": "1948-12-21T00:00:00",
+        "date_created": "1948-01-26T00:00:00",
         "date_deleted": "",
         "name": "Fiorano Al Serio",
         "name_alt": "",
@@ -104345,20 +104303,6 @@
         ],
         "name_trans": "Gonnesa",
         "province": "SU"
-    },
-    {
-        "active": false,
-        "code": "E086",
-        "date_created": "1940-02-13T00:00:00",
-        "date_deleted": "1945-04-20T00:00:00",
-        "name": "Gonnesa",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "gonnesa"
-        ],
-        "name_trans": "Gonnesa",
-        "province": "CA"
     },
     {
         "active": false,
@@ -118092,10 +118036,10 @@
         "province": "CO"
     },
     {
-        "active": true,
+        "active": false,
         "code": "E608",
         "date_created": "1861-03-17T00:00:00",
-        "date_deleted": "",
+        "date_deleted": "2026-01-31T00:00:00",
         "name": "Lirio",
         "name_alt": "",
         "name_alt_trans": "",
@@ -122033,20 +121977,6 @@
         "code": "E747",
         "date_created": "2016-04-28T00:00:00",
         "date_deleted": "",
-        "name": "Luogosanto",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "luogosanto"
-        ],
-        "name_trans": "Luogosanto",
-        "province": "SS"
-    },
-    {
-        "active": false,
-        "code": "E747",
-        "date_created": "1941-01-01T00:00:00",
-        "date_deleted": "1947-10-25T00:00:00",
         "name": "Luogosanto",
         "name_alt": "",
         "name_alt_trans": "",
@@ -128370,20 +128300,6 @@
         ],
         "name_trans": "Marrubiu",
         "province": "OR"
-    },
-    {
-        "active": false,
-        "code": "E972",
-        "date_created": "1928-11-04T00:00:00",
-        "date_deleted": "1948-05-26T00:00:00",
-        "name": "Marrubiu",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "marrubiu"
-        ],
-        "name_trans": "Marrubiu",
-        "province": "CA"
     },
     {
         "active": true,
@@ -136169,20 +136085,6 @@
         ],
         "name_trans": "Mogorella",
         "province": "OR"
-    },
-    {
-        "active": false,
-        "code": "F270",
-        "date_created": "1928-06-15T00:00:00",
-        "date_deleted": "1951-01-11T00:00:00",
-        "name": "Mogorella",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "mogorella"
-        ],
-        "name_trans": "Mogorella",
-        "province": "CA"
     },
     {
         "active": false,
@@ -149767,10 +149669,10 @@
         "province": "AL"
     },
     {
-        "active": true,
+        "active": false,
         "code": "F814",
         "date_created": "1928-12-01T00:00:00",
-        "date_deleted": "",
+        "date_deleted": "2025-10-09T00:00:00",
         "name": "Murisengo",
         "name_alt": "",
         "name_alt_trans": "",
@@ -149778,6 +149680,20 @@
             "murisengo"
         ],
         "name_trans": "Murisengo",
+        "province": "AL"
+    },
+    {
+        "active": true,
+        "code": "F814",
+        "date_created": "2025-10-10T00:00:00",
+        "date_deleted": "",
+        "name": "Murisengo Monferrato",
+        "name_alt": "",
+        "name_alt_trans": "Murisengo Monferrato",
+        "name_slugs": [
+            "murisengo-monferrato"
+        ],
+        "name_trans": "Murisengo Monferrato",
         "province": "AL"
     },
     {
@@ -150515,10 +150431,10 @@
         "province": "TN"
     },
     {
-        "active": true,
+        "active": false,
         "code": "F838",
         "date_created": "1866-11-19T00:00:00",
-        "date_deleted": "",
+        "date_deleted": "2026-02-20T00:00:00",
         "name": "Nanto",
         "name_alt": "",
         "name_alt_trans": "",
@@ -154988,20 +154904,6 @@
         ],
         "name_trans": "Nuxis",
         "province": "SU"
-    },
-    {
-        "active": false,
-        "code": "F991",
-        "date_created": "1934-01-01:T00:00:00",
-        "date_deleted": "1958-01-25T00:00:00",
-        "name": "Nuxis",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "nuxis"
-        ],
-        "name_trans": "Nuxis",
-        "province": "CA"
     },
     {
         "active": false,
@@ -210757,20 +210659,6 @@
         "province": "OR"
     },
     {
-        "active": false,
-        "code": "A368",
-        "date_created": "1928-11-04T00:00:00",
-        "date_deleted": "1947-01-23T00:00:00",
-        "name": "San Nicol\u00f2 D'Arcidano",
-        "name_alt": "",
-        "name_alt_trans": "",
-        "name_slugs": [
-            "san-nicolo-d-arcidano"
-        ],
-        "name_trans": "San Nicolo' D'Arcidano",
-        "province": "CA"
-    },
-    {
         "active": true,
         "code": "I063",
         "date_created": "1868-02-14T00:00:00",
@@ -222194,7 +222082,7 @@
     {
         "active": true,
         "code": "I482",
-        "date_created": "1948-03-21T00:00:00",
+        "date_created": "1948-03-06T00:00:00",
         "date_deleted": "",
         "name": "Scafa",
         "name_alt": "",
@@ -254975,10 +254863,10 @@
         "province": "IM"
     },
     {
-        "active": true,
+        "active": false,
         "code": "L599",
         "date_created": "1925-08-22T00:00:00",
-        "date_deleted": "",
+        "date_deleted": "2026-05-13T00:00:00",
         "name": "Vallecrosia",
         "name_alt": "",
         "name_alt_trans": "",
@@ -254986,6 +254874,20 @@
             "vallecrosia"
         ],
         "name_trans": "Vallecrosia",
+        "province": "IM"
+    },
+    {
+        "active": true,
+        "code": "L599",
+        "date_created": "2026-05-14T00:00:00",
+        "date_deleted": "",
+        "name": "Vallecrosia Al Mare",
+        "name_alt": "",
+        "name_alt_trans": "",
+        "name_slugs": [
+            "vallecrosia-al-mare"
+        ],
+        "name_trans": "Vallecrosia Al Mare",
         "province": "IM"
     },
     {

@@ -1,0 +1,99 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+*.txt
+!requirements.txt
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Docker
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+.dockerignore
+
+# Deployment
+deploy-config.yaml
+environments/
+*.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Backups
+backups/
+*.backup
+*.bak
+
+# Cloud credentials
+*.json
+!pyproject.toml
+*credentials*
+*-key.json
+service-account*.json
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Scripts (deployment only, not needed in container)
+scripts/deploy*.py
+scripts/create_admin.py
+scripts/test_*.py

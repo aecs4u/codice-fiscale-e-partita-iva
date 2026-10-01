@@ -1,6 +1,6 @@
 import pytest
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 test_data = [
     ("CCCFBA85D03Z105P", "Cecoslovacchia"),
@@ -19,5 +19,5 @@ def test_issue_0036(code, expected_country):
     """
     Test for decoding fiscal codes with historical country names.
     """
-    data = codicefiscale.decode(code)
+    data = codice_fiscale.decode(code)
     assert data["birthplace"]["name"] == expected_country

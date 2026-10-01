@@ -35,7 +35,7 @@ import os
 os.environ['GOOGLE_CLOUD_FUNCTION'] = '1'
 
 # Import FastAPI app directly
-from codicefiscale.app import app
+from codice_fiscale.app import app
 
 if __name__ == "__main__":
     import uvicorn
@@ -73,7 +73,7 @@ ENV PYTHONPATH=/app
 EXPOSE 8080
 
 # Start application
-CMD exec uvicorn codicefiscale.app:app --host 0.0.0.0 --port ${PORT:-8080}
+CMD exec uvicorn codice_fiscale.app:app --host 0.0.0.0 --port ${PORT:-8080}
 ```
 
 ## Deployment Validation ✅

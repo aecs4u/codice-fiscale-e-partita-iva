@@ -1,6 +1,6 @@
 # Authentication Setup Guide
 
-This guide explains how to set up and use Clerk authentication with the python-codicefiscale FastAPI application.
+This guide explains how to set up and use Clerk authentication with the python-codice_fiscale FastAPI application.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -17,7 +17,7 @@ This guide explains how to set up and use Clerk authentication with the python-c
    ```bash
    uv sync --extra api
    # or
-   pip install 'python-codicefiscale[api]'
+   pip install 'python-codice_fiscale[api]'
    ```
 
 2. **Create a Clerk account** at [clerk.com](https://clerk.com)
@@ -109,10 +109,10 @@ This script will:
 
 ```bash
 # Start server with authentication enabled
-uv run python -m codicefiscale.__main_api__
+uv run python -m codice_fiscale.__main_api__
 
 # Or start without authentication for testing
-CLERK_PUBLISHABLE_KEY="" uv run python -m codicefiscale.__main_api__
+CLERK_PUBLISHABLE_KEY="" uv run python -m codice_fiscale.__main_api__
 ```
 
 ### 3. Check Authentication Status
@@ -285,7 +285,7 @@ console.log(result);
 
 1. **Enable JWT signature verification**:
    ```python
-   # In codicefiscale/auth.py, replace line 57:
+   # In codice_fiscale/auth.py, replace line 57:
    # options={"verify_signature": False}  # DANGER: Only for demo!
    # With proper JWKS verification:
    
@@ -359,7 +359,7 @@ python test_clerk_auth.py
 # Install with API extras
 uv sync --extra api
 # or
-pip install 'python-codicefiscale[api]'
+pip install 'python-codice_fiscale[api]'
 ```
 
 ### Debug Mode
@@ -402,9 +402,9 @@ python test_clerk_auth.py
 
 - **Clerk Documentation**: [docs.clerk.com](https://docs.clerk.com)
 - **Clerk Support**: Available through their dashboard
-- **Project Issues**: [GitHub Issues](https://github.com/fabiocaccamo/python-codicefiscale/issues)
+- **Project Issues**: [GitHub Issues](https://github.com/fabiocaccamo/python-codice_fiscale/issues)
 - **Test Script**: Run `python test_clerk_auth.py` for diagnostic information
 
 ---
 
-For more information about the python-codicefiscale library, see the main [README.md](README.md).
+For more information about the python-codice_fiscale library, see the main [README.md](README.md).

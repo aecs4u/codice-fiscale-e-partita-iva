@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 @pytest.fixture
@@ -193,80 +193,80 @@ def encode_test_cases():
 def test_encode_lastname(lastname_test_cases):
     """Test encoding last names."""
     for case in lastname_test_cases:
-        assert codicefiscale.encode_lastname(case["input"]) == case["result"]
+        assert codice_fiscale.encode_lastname(case["input"]) == case["result"]
 
 
 def test_encode_firstname(firstname_test_cases):
     """Test encoding first names."""
     for case in firstname_test_cases:
-        assert codicefiscale.encode_firstname(case["input"]) == case["result"]
+        assert codice_fiscale.encode_firstname(case["input"]) == case["result"]
 
 
 def test_encode_birthdate_formats(birthdate_formats_test_cases):
     """Test encoding birthdates with various formats."""
     for case in birthdate_formats_test_cases:
-        assert codicefiscale.encode_birthdate(case["input"], "M") == case["result"]
+        assert codice_fiscale.encode_birthdate(case["input"], "M") == case["result"]
 
 
 def test_encode_birthdate_invalid_arguments():
     """Test invalid arguments for encoding birthdates."""
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthdate(None, "M")
+        codice_fiscale.encode_birthdate(None, "M")
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthdate("03/04/1985", None)
+        codice_fiscale.encode_birthdate("03/04/1985", None)
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthdate("03/04/1985", "X")
+        codice_fiscale.encode_birthdate("03/04/1985", "X")
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthdate("1985/1985/1985", "M")
+        codice_fiscale.encode_birthdate("1985/1985/1985", "M")
 
 
 def test_encode_birthdate_gender(birthdate_gender_test_cases):
     """Test encoding birthdates with gender."""
     for case in birthdate_gender_test_cases:
-        assert codicefiscale.encode_birthdate(*case["input"]) == case["result"]
+        assert codice_fiscale.encode_birthdate(*case["input"]) == case["result"]
 
 
 def test_encode_birthplace_italy(birthplace_italy_test_cases):
     """Test encoding birthplaces in Italy."""
     for case in birthplace_italy_test_cases:
-        assert codicefiscale.encode_birthplace(case["input"]) == case["result"]
+        assert codice_fiscale.encode_birthplace(case["input"]) == case["result"]
 
 
 def test_encode_birthplace_foreign(birthplace_foreign_test_cases):
     """Test encoding birthplaces in foreign countries."""
     for case in birthplace_foreign_test_cases:
-        assert codicefiscale.encode_birthplace(case["input"]) == case["result"]
+        assert codice_fiscale.encode_birthplace(case["input"]) == case["result"]
 
 
 def test_encode_birthplace_invalid_arguments():
     """Test invalid arguments for encoding birthplaces."""
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthplace(None)
+        codice_fiscale.encode_birthplace(None)
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthplace("Area 51")
+        codice_fiscale.encode_birthplace("Area 51")
 
 
 def test_encode_birthplace_invalid_birthdate():
     """Test invalid birthdate for encoding birthplaces."""
     with pytest.raises(ValueError):
-        codicefiscale.encode_birthplace("Torino", "01/01/1888")
+        codice_fiscale.encode_birthplace("Torino", "01/01/1888")
 
 
 def test_encode_cin(cin_test_cases):
     """Test encoding CIN."""
     for case in cin_test_cases:
-        assert codicefiscale.encode_cin(case["input"]) == case["result"]
+        assert codice_fiscale.encode_cin(case["input"]) == case["result"]
 
 
 def test_encode_cin_invalid_arguments():
     """Test invalid arguments for encoding CIN."""
     with pytest.raises(ValueError):
-        codicefiscale.encode_cin(None)
+        codice_fiscale.encode_cin(None)
     with pytest.raises(ValueError):
-        codicefiscale.encode_cin("CCCFBA85D03")
+        codice_fiscale.encode_cin("CCCFBA85D03")
 
 
 def test_encode(encode_test_cases):
     """Test encoding full fiscal codes."""
     for case in encode_test_cases:
-        assert codicefiscale.encode(**case["input"]) == case["result"]
+        assert codice_fiscale.encode(**case["input"]) == case["result"]

@@ -1,4 +1,4 @@
-from codicefiscale import codicefiscale
+from codice_fiscale import codice_fiscale
 
 
 def test_issue_0037():
@@ -13,8 +13,8 @@ def test_issue_0037():
         "birthdate": "03/04/1885",
         "birthplace": "Vignola",
     }
-    code = codicefiscale.encode(**data)
-    decoded_data = codicefiscale.decode(code)
+    code = codice_fiscale.encode(**data)
+    decoded_data = codice_fiscale.decode(code)
     birthplace = decoded_data["birthplace"]
     assert birthplace is not None
     assert isinstance(birthplace, dict)

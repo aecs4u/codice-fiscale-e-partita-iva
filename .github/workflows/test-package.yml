@@ -44,7 +44,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests --cov=codicefiscale --cov-report=term-missing --cov-fail-under=90
+        pytest tests --cov=codice_fiscale --cov-report=term-missing --cov-fail-under=90
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5

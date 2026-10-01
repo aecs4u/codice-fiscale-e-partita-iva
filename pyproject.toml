@@ -8,7 +8,7 @@ description = "encode / decode italian fiscal codes - codifica / decodifica del 
 authors = [
     {name = "Emanuele Cannizzaro", email = "emanuele.cannizzaro@gmail.com"},
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 keywords = [
     "codice_fiscale",
     "codice",
@@ -37,10 +37,10 @@ dependencies = [
     "fastapi>=0.116.1",
     "jinja2>=3.1.6",
     "pyjwt[crypto]>=2.10.1",
-    "python-dateutil >= 2.8, < 2.10",
+    "python-dateutil>= 2.8",
     "python-dotenv>=1.1.1",
-    "python-fsutil >= 0.10.0, < 1.0.0",
-    "python-slugify >= 7.0.0, < 9.0.0",
+    "python-fsutil>= 0.10.0",
+    "python-slugify>= 7.0.0",
     "uvicorn>=0.35.0",
 ]
 
@@ -51,12 +51,12 @@ maintainers = [
 
 [project.optional-dependencies]
 api = [
-    "fastapi >= 0.100.0, < 1.0.0",
-    "uvicorn >= 0.20.0, < 1.0.0",
+    "fastapi>= 0.100.0",
+    "uvicorn>= 0.20.0",
     "aecs4u-auth",
-    "python-dotenv >= 1.0.0, < 2.0.0",
-    "jinja2 >= 3.1.0, < 4.0.0",
-    "python-multipart >= 0.0.6, < 1.0.0",
+    "python-dotenv>= 1.0.0",
+    "jinja2>= 3.1.0",
+    "python-multipart>= 0.0.6",
 ]
 
 [project.readme]
@@ -134,7 +134,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.uv.sources]
-aecs4u-auth = { git = "https://github.com/aecs4u/aecs4u-auth.git", branch = "main" }
+aecs4u-auth = { workspace = true }
 
 [tool.setuptools]
 packages = ["codice_fiscale"]
@@ -147,8 +147,8 @@ codice_fiscale = ["data/*.json"]
 dev = [
     "fastapi>=0.116.1",
     "httpx>=0.28.1",
-    "pytest==8.4.*",
-    "pytest-cov==6.2.*",
+    "pytest>=8.4",
+    "pytest-cov>=6.2",
     "ruff>=0.7.0",
     "uvicorn>=0.35.0",
 ]

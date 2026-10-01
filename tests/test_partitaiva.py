@@ -1,6 +1,6 @@
 import pytest
 
-from codicefiscale import partitaiva
+from codice_fiscale import partitaiva
 
 
 class TestPartitaIVA:
