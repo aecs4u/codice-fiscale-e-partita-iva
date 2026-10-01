@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 # Check if we're running in a cloud environment
@@ -20,7 +21,6 @@ try:
     from fastapi import Depends, FastAPI, HTTPException, Query, Request
     from fastapi.responses import HTMLResponse, JSONResponse
     from fastapi.staticfiles import StaticFiles
-    from fastapi.templating import Jinja2Templates
     from pydantic import BaseModel, Field
 
     # Only load .env in local development, not in cloud deployments
@@ -30,6 +30,14 @@ try:
 except ImportError as e:
     raise ImportError(
         "FastAPI dependencies not installed. "
+        "Install with: pip install 'python-codice_fiscale[api]'"
+    ) from e
+
+try:
+    from aecs4u_theme import ThemeConfig, setup_theme
+except ImportError as e:
+    raise ImportError(
+        "The AECS4U theme is required for the web application. "
         "Install with: pip install 'python-codice_fiscale[api]'"
     ) from e
 
@@ -87,20 +95,26 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Template setup
-from pathlib import Path
-
 templates_dir = Path(__file__).parent / "templates"
 static_dir = Path(__file__).parent / "static"
 
-# For cloud deployments, we might not have static files
-if not IS_CLOUD_DEPLOYMENT and static_dir.exists():
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+theme_config = ThemeConfig(
+    site_id=_get_non_empty_env("AECS4U_SITE_ID") or "codice-fiscale",
+    site_name=_get_non_empty_env("AECS4U_SITE_NAME") or "Codice Fiscale e Partita IVA",
+    site_tagline=_get_non_empty_env("AECS4U_SITE_TAGLINE") or "",
+    sidebar_enabled=False,
+)
+theme = setup_theme(
+    app,
+    config=theme_config,
+    templates_dir=templates_dir,
+    supported_locales=["it", "en"],
+    default_locale="it",
+)
 
-# Setup templates if available
-templates = None
-if templates_dir.exists():
-    templates = Jinja2Templates(directory=templates_dir)
+# Mount app assets after the theme's more-specific /static/aecs4u-theme mount.
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 class FiscalCodeRequest(BaseModel):
@@ -142,25 +156,20 @@ else:
     optional_auth_dependency = Depends(no_auth)
 
 
-@app.get("/", response_class=HTMLResponse if templates else JSONResponse)
+@app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     """Serve the web tool; API discovery is available at ``/api`` and ``/docs``."""
-    if templates is None:
-        return await api_info({})
-
     clerk_publishable_key = (
         _get_non_empty_env("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY")
         or _get_non_empty_env("CLERK_PUBLISHABLE_KEY")
         if AUTH_ENABLED
         else ""
     )
-    return templates.TemplateResponse(
-        request,
+    return theme.render(
         "index.html",
-        {
-            "auth_enabled": AUTH_ENABLED,
-            "clerk_publishable_key": clerk_publishable_key,
-        },
+        request,
+        auth_enabled=AUTH_ENABLED,
+        clerk_publishable_key=clerk_publishable_key,
     )
 
 

@@ -1,0 +1,120 @@
+body {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.cf-hero {
+    background: linear-gradient(120deg, var(--color-primary-900), var(--color-primary-700));
+    color: var(--color-text-inverse);
+    padding: 3.25rem 0 5rem;
+}
+
+.cf-hero p {
+    color: var(--color-primary-100);
+}
+
+.cf-hero .eyebrow {
+    color: var(--color-primary-200);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.app-shell {
+    margin-top: -2.5rem;
+    padding-bottom: 2rem;
+    position: relative;
+}
+
+.task-tabs {
+    border-bottom: 1px solid var(--bs-border-color);
+    gap: 0.5rem;
+}
+
+.task-tabs .nav-link {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.task-tabs .nav-link.active {
+    background: var(--bs-body-bg);
+    border-color: var(--bs-border-color) var(--bs-border-color) var(--bs-body-bg);
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.nav-pills .nav-link {
+    border: 1px solid transparent;
+    color: var(--bs-body-color);
+}
+
+.nav-pills .nav-link.active {
+    background: var(--bs-primary);
+    color: var(--bs-white);
+}
+
+.result-box {
+    margin-top: 1rem;
+}
+
+.result-box pre {
+    margin: 0.5rem 0 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.suggestion-list {
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--radius-lg, 0.5rem);
+    box-shadow: var(--shadow-lg, 0 0.5rem 1.2rem rgb(0 0 0 / 15%));
+    inset-inline: 0;
+    max-height: 16rem;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 5;
+}
+
+.suggestion-option {
+    background: transparent;
+    border: 0;
+    color: var(--bs-body-color);
+    display: block;
+    padding: 0.65rem 0.8rem;
+    text-align: left;
+    width: 100%;
+}
+
+.suggestion-option:hover,
+.suggestion-option[aria-selected="true"] {
+    background: var(--bs-primary-bg-subtle);
+}
+
+.privacy-note {
+    border-inline-start: 4px solid var(--color-primary-500);
+}
+
+.sr-status {
+    min-height: 1.5rem;
+}
+
+.language-toggle {
+    color: var(--color-text-inverse);
+    text-decoration: none;
+}
+
+.language-toggle:hover,
+.language-toggle:focus-visible {
+    color: var(--color-primary-100);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}

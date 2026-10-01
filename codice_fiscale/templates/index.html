@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 
+{% block title %}Codice Fiscale e Partita IVA{% endblock %}
+
+{% block language_switcher %}
+<button class="btn btn-link language-toggle" type="button" id="languageToggle" aria-label="Switch language">English</button>
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ request.url_for('static', path='css/app.css') }}">
+{% endblock %}
+
 {% block content %}
-<section class="hero-section">
+<section class="cf-hero">
     <div class="container">
         <p class="eyebrow small fw-bold mb-2" data-i18n="eyebrow">Strumento gratuito</p>
         <h1 class="display-5 fw-bold mb-3" data-i18n="heroTitle">Calcola e verifica i codici italiani</h1>
@@ -11,7 +22,7 @@
 
 <div class="container app-shell pb-4">
     {% if auth_enabled %}
-    <section class="notice-card p-3 p-md-4 mb-3" aria-labelledby="authHeading">
+    <section class="card notice-card p-3 p-md-4 mb-3" aria-labelledby="authHeading">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
             <div>
                 <h2 class="h6 mb-1" id="authHeading" data-i18n="authHeading">Accesso richiesto</h2>
@@ -26,7 +37,7 @@
     </section>
     {% endif %}
 
-    <section class="tool-card" aria-labelledby="toolHeading">
+    <section class="card tool-card p-3 p-md-4" aria-labelledby="toolHeading">
         <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
             <div>
                 <h2 class="h4 mb-1" id="toolHeading" data-i18n="toolTitle">Scegli cosa ti serve</h2>
@@ -144,7 +155,7 @@
         </section>
     </section>
 
-    <section class="notice-card privacy-note p-3 p-md-4 mt-3" aria-labelledby="privacyHeading">
+    <section class="card notice-card privacy-note p-3 p-md-4 mt-3" aria-labelledby="privacyHeading">
         <h2 class="h6" id="privacyHeading" data-i18n="privacyHeading">Dati personali e privacy</h2>
         <p class="mb-2" data-i18n="privacyText">Nome, cognome, data e luogo di nascita sono dati personali. L’app non li salva nello storage del browser. I dati inviati vengono elaborati dal servizio; la conservazione lato server dipende dalla distribuzione in uso. Il browser può applicare le proprie funzioni di compilazione automatica.</p>
         <h3 class="h6 mt-3" data-i18n="accuracyHeading">Cosa verifica questo strumento</h3>
@@ -167,7 +178,26 @@
 </div>
 {% endblock %}
 
+{% block footer_sections %}
+<div class="footer-section">
+    <p class="footer-title" data-i18n="footerTools">Strumenti</p>
+    <ul class="footer-links">
+        <li><a href="/docs" data-i18n="apiDocs">Documentazione API</a></li>
+        <li><a href="/api" data-i18n="apiInfo">Elenco endpoint</a></li>
+    </ul>
+</div>
+<div class="footer-section">
+    <p class="footer-title" data-i18n="footerProject">Progetto</p>
+    <ul class="footer-links">
+        <li><a href="https://github.com/aecs4u/codice-fiscale-e-partita-iva">GitHub</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block cookie_consent %}{% endblock %}
+
 {% block scripts %}
+{{ super() }}
 <script>
 const AUTH_ENABLED = {{ auth_enabled|tojson }};
 const CLERK_PUBLISHABLE_KEY = {{ clerk_publishable_key|default('', true)|tojson }};
@@ -187,7 +217,7 @@ const copy = {
         lastName: 'Cognome', firstName: 'Nome', gender: 'Sesso riportato nei dati anagrafici', chooseGender: 'Seleziona', male: 'Maschile (M)', female: 'Femminile (F)', birthDate: 'Data di nascita', birthPlace: 'Comune o Paese di nascita', birthplaceHint: 'Scrivi almeno 2 lettere e seleziona un suggerimento.', country: 'Paese', historicHint: 'Per i comuni storici viene considerata la data di nascita.', generateFiscalButton: 'Genera Codice Fiscale',
         validateButton: 'Verifica', decodeButton: 'Decodifica', vatValidateTitle: 'Verifica una Partita IVA', vatGenerateTitle: 'Completa una Partita IVA', vatDecodeTitle: 'Decodifica una Partita IVA', vatPlaceholder: 'Es. 01234567890', vatFormatHint: 'Inserisci 11 cifre.', vatBaseLabel: 'Prime 10 cifre', vatBasePlaceholder: 'Es. 0123456789', generateVatButton: 'Completa Partita IVA',
         privacyHeading: 'Dati personali e privacy', privacyText: 'Nome, cognome, data e luogo di nascita sono dati personali. L’app non li salva nello storage del browser. I dati inviati vengono elaborati dal servizio; la conservazione lato server dipende dalla distribuzione in uso. Il browser può applicare le proprie funzioni di compilazione automatica.', accuracyHeading: 'Cosa verifica questo strumento', accuracyText: 'La verifica controlla struttura e carattere di controllo; non interroga registri ufficiali né conferma che il codice sia stato attribuito a una persona. Un codice calcolato può differire da quello assegnato ufficialmente, per esempio in caso di omocodia.', developerSummary: 'Documentazione API per sviluppatori', developerText: 'L’interfaccia usa gli endpoint REST dello stesso servizio. La documentazione interattiva e l’elenco JSON sono disponibili qui:', apiDocs: 'Documentazione API', apiInfo: 'Elenco endpoint',
-        enterValue: 'Inserisci un valore.', chooseBirthplace: 'Seleziona un comune o un Paese dai suggerimenti.', loading: 'Caricamento…', noSuggestions: 'Nessun luogo trovato.', networkError: 'Errore di rete', copyCode: 'Copia codice', copied: 'Codice copiato.', copyFailed: 'Impossibile copiare il codice.'
+        enterValue: 'Inserisci un valore.', chooseBirthplace: 'Seleziona un comune o un Paese dai suggerimenti.', loading: 'Caricamento…', noSuggestions: 'Nessun luogo trovato.', networkError: 'Errore di rete', copyCode: 'Copia codice', copied: 'Codice copiato.', copyFailed: 'Impossibile copiare il codice.', footerTools: 'Strumenti', footerProject: 'Progetto'
     },
         en: {
         pageTitle: 'Italian Fiscal Code and VAT',
@@ -198,7 +228,7 @@ const copy = {
         lastName: 'Last name', firstName: 'First name', gender: 'Gender in the registry data', chooseGender: 'Choose', male: 'Male (M)', female: 'Female (F)', birthDate: 'Date of birth', birthPlace: 'Municipality or country of birth', birthplaceHint: 'Type at least 2 letters and select a suggestion.', country: 'Country', historicHint: 'For historical municipalities, the date of birth is used to choose the code.', generateFiscalButton: 'Generate fiscal code',
         validateButton: 'Validate', decodeButton: 'Decode', vatValidateTitle: 'Validate a VAT number', vatGenerateTitle: 'Complete a VAT number', vatDecodeTitle: 'Decode a VAT number', vatPlaceholder: 'e.g. 01234567890', vatFormatHint: 'Enter 11 digits.', vatBaseLabel: 'First 10 digits', vatBasePlaceholder: 'e.g. 0123456789', generateVatButton: 'Complete VAT number',
         privacyHeading: 'Personal data and privacy', privacyText: 'Name, date of birth, and place of birth are personal data. The app does not save them in browser storage. Submitted fields are processed by the service; server-side retention depends on the deployment you are using. Your browser may apply its own autofill settings.', accuracyHeading: 'What this tool checks', accuracyText: 'Validation checks structure and the check character; it does not query official records or confirm that a code was assigned to a person. A calculated code may differ from the one officially assigned, for example in an omocodia case.', developerSummary: 'API documentation for developers', developerText: 'This interface uses REST endpoints on the same service. Interactive documentation and the JSON endpoint list are available here:', apiDocs: 'API documentation', apiInfo: 'Endpoint list',
-        enterValue: 'Enter a value.', chooseBirthplace: 'Select a municipality or country from the suggestions.', loading: 'Loading…', noSuggestions: 'No places found.', networkError: 'Network error', copyCode: 'Copy code', copied: 'Code copied.', copyFailed: 'Could not copy the code.'
+        enterValue: 'Enter a value.', chooseBirthplace: 'Select a municipality or country from the suggestions.', loading: 'Loading…', noSuggestions: 'No places found.', networkError: 'Network error', copyCode: 'Copy code', copied: 'Code copied.', copyFailed: 'Could not copy the code.', footerTools: 'Tools', footerProject: 'Project'
     }
 };
 
@@ -257,7 +287,7 @@ function showResult(containerId, result, isSuccess = true) {
     const container = document.getElementById(containerId);
     container.replaceChildren();
     const box = document.createElement('div');
-    box.className = `result-box ${isSuccess ? 'result-success' : 'result-error'}`;
+    box.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'} result-box`;
     const pre = document.createElement('pre');
     pre.textContent = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
     box.append(pre);

@@ -161,6 +161,7 @@ uv run python -m codice_fiscale.__main_api__
 ```
 
 The API will be available at `http://localhost:8000` with automatic documentation at `http://localhost:8000/docs`.
+The `api` extra includes `aecs4u-theme`, which supplies the web app's shared page layout, design tokens, and Bootstrap components; the calculator's small set of custom styles is served by the app.
 
 #### Authentication
 The API supports optional Clerk authentication. To enable authentication:
