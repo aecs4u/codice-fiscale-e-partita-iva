@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import sys
 from datetime import datetime
 from typing import Any
 
@@ -9,11 +8,8 @@ import fsutil
 
 
 def get_data_basedir() -> str:
-    # if getattr(sys, "frozen", False):
-    #     # standalone executable (eg. PyInstaller)
-    #     return os.path.dirname(sys.executable)
-    # Get the project root directory (one level up from codicefiscale package)
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    # The municipality and country JSON files are packaged next to this module.
+    return os.path.dirname(__file__)
 
 
 def get_data(filename: str) -> Any:

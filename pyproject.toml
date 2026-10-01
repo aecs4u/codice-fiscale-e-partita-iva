@@ -145,6 +145,9 @@ line-ending = "auto"
 [tool.setuptools]
 packages = ["codicefiscale"]
 
+[tool.setuptools.package-data]
+codicefiscale = ["data/*.json"]
+
 [tool.setuptools.dynamic.version]
 attr = "codicefiscale.metadata.__version__"
 

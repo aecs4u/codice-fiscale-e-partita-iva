@@ -17,7 +17,7 @@ python-codicefiscale/
 ├── codicefiscale/              # Main Python library
 ├── frontend/                   # Node.js JWT token generator for testing
 ├── tests/                      # Python test suite
-├── data/                       # Municipality and country data
+├── codicefiscale/data/         # Municipality and country data
 ├── scripts/                    # Data update scripts
 └── deploy-cloudrun.sh           # Google Cloud Run deployment
 ```
